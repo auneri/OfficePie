@@ -13,9 +13,9 @@ class Presentation(object):
     >>> del p
     '''
 
-    def __init__(self, template='istar'):
-        win32com('Microsoft Office 15.0 Object Library')
-        win32com('Microsoft PowerPoint 15.0 Object Library')
+    def __init__(self, version=15.0, template='istar'):
+        win32com('Microsoft Office {:.1f} Object Library'.format(version))
+        win32com('Microsoft PowerPoint {:.1f} Object Library'.format(version))
         self.application = Dispatch('PowerPoint.Application')
         self.application.Visible = True
         self.presentation = self.application.Presentations.Add()
