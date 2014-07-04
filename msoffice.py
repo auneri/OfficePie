@@ -1,40 +1,44 @@
 import sys
 from cStringIO import StringIO
 
-from pythoncom import CoUninitialize
 from win32com.client import constants, Dispatch, makepy
 
 
 class Presentation(object):
-    '''A minimial wrapper around win32com functionalty for creating PowerPoint presentations.
+    '''A minimial wrapper for managing PowerPoint through the Component Object Model (COM).
     >>> p = Presentation()
+    >>> p.set_template()
     >>> slide = p.presentation.Slides.Add(p.presentation.Slides.Count + 1, constants.ppLayoutBlank)
     >>> p.presentation.SaveAs('/path/to/presentation.pptx')
     >>> del p
+    See http://msdn.microsoft.com/en-us/library/ff743835(v=office.15).aspx.
     '''
 
-    def __init__(self, version=15.0, template='istar'):
+    def __init__(self, path=None, version=15.0):
         win32com('Microsoft Office {:.1f} Object Library'.format(version))
         win32com('Microsoft PowerPoint {:.1f} Object Library'.format(version))
         self.application = Dispatch('PowerPoint.Application')
         self.application.Visible = True
-        self.presentation = self.application.Presentations.Add()
-        self._set_template(template)
+        if path:
+            self.ppt = self.application.Presentations.Open(path)
+        else:
+            self.ppt = self.application.Presentations.Add()
 
     def __del__(self):
-        self.presentation.Close()
+        from pythoncom import CoUninitialize
+        self.ppt.Close()
         self.application.Quit()
         CoUninitialize()
 
-    def _set_template(self, template):
+    def set_template(self, template='istar'):
         if template == 'istar':
-            self.presentation.PageSetup.SlideSize = constants.ppSlideSizeOnScreen
-            self.presentation.SlideMaster.Background.Fill.ForeColor.RGB = rgb(0,0,0)
-            title = self.presentation.SlideMaster.TextStyles(constants.ppTitleStyle).TextFrame.TextRange
+            self.ppt.PageSetup.SlideSize = constants.ppSlideSizeOnScreen
+            self.ppt.SlideMaster.Background.Fill.ForeColor.RGB = rgb(0,0,0)
+            title = self.ppt.SlideMaster.TextStyles(constants.ppTitleStyle).TextFrame.TextRange
             title.Font.Name = 'Garamond'
             title.Font.Bold = True
             title.Font.Color.RGB = rgb(255, 255, 0)
-            body = self.presentation.SlideMaster.TextStyles(constants.ppBodyStyle).TextFrame.TextRange
+            body = self.ppt.SlideMaster.TextStyles(constants.ppBodyStyle).TextFrame.TextRange
             body.Font.Name = 'Arial'
             body.Font.Color.RGB = rgb(255, 255, 255)
             body.ParagraphFormat.Bullet.Type = constants.ppBulletNone
