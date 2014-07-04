@@ -2,6 +2,25 @@ import sys
 from cStringIO import StringIO
 
 from win32com.client import constants, Dispatch, makepy
+from win32com.client.gencache import EnsureDispatch
+
+
+class Document(object):
+    '''A minimial wrapper for managing Word through the Component Object Model (COM).
+    See http://msdn.microsoft.com/en-us/library/ff837519(v=office.15).aspx.
+    '''
+
+    def __init__(self, path=None, visible=True):
+        self.application = EnsureDispatch('Word.Application')
+        self.application.Visible = visible
+        if path:
+            self.doc = self.application.Documents.Open(path)
+        else:
+            self.doc = self.application.Documents.Add()
+
+    def __del__(self):
+        self.doc.Close(False)
+        self.application.Quit()
 
 
 class Presentation(object):
