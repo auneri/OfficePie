@@ -22,6 +22,45 @@ class Document(object):
         self.doc.Close(False)
         self.application.Quit()
 
+    def mark_revisions(self, strike_deletions=False):
+        '''Convert tracked changes to marked revisions.'''
+        track_revisions = self.doc.TrackRevisions
+        self.doc.TrackRevisions = False
+        for i, r in enumerate(self.doc.Revisions):
+            if r.Type == constants.wdRevisionDelete:
+                if strike_deletions:
+                    r.Range.Font.ColorIndex = constants.wdBlue
+                    r.Range.Font.StrikeThrough = True
+                    r.Reject()
+                else:
+                    r.Accept()
+            elif r.Type == constants.wdRevisionInsert:
+                r.Range.Font.ColorIndex = constants.wdBlue
+                r.Accept()
+            elif r.Type == constants.wdNoRevision:                print >> sys.stderr, 'Unhandled revision: No Revision'
+            elif r.Type == constants.wdRevisionCellDeletion:      print >> sys.stderr, 'Unhandled revision: Cell Deletion'
+            elif r.Type == constants.wdRevisionCellInsertion:     print >> sys.stderr, 'Unhandled revision: Cell Insertion'
+            elif r.Type == constants.wdRevisionCellMerge:         print >> sys.stderr, 'Unhandled revision: Cell Merge'
+            elif r.Type == constants.wdRevisionCellSplit:         print >> sys.stderr, 'Unhandled revision: Cell Split'
+            elif r.Type == constants.wdRevisionConflict:          print >> sys.stderr, 'Unhandled revision: Conflict'
+            elif r.Type == constants.wdRevisionConflictDelete:    print >> sys.stderr, 'Unhandled revision: Conflict Delete'
+            elif r.Type == constants.wdRevisionConflictInsert:    print >> sys.stderr, 'Unhandled revision: Conflict Insert'
+            elif r.Type == constants.wdRevisionDisplayField:      print >> sys.stderr, 'Unhandled revision: Display Field'
+            elif r.Type == constants.wdRevisionMovedFrom:         print >> sys.stderr, 'Unhandled revision: Moved From'
+            elif r.Type == constants.wdRevisionMovedTo:           print >> sys.stderr, 'Unhandled revision: Moved To'
+            elif r.Type == constants.wdRevisionParagraphNumber:   print >> sys.stderr, 'Unhandled revision: Paragraph Number'
+            elif r.Type == constants.wdRevisionParagraphProperty: print >> sys.stderr, 'Unhandled revision: Paragraph Property'
+            elif r.Type == constants.wdRevisionProperty:          print >> sys.stderr, 'Unhandled revision: Property'
+            elif r.Type == constants.wdRevisionReconcile:         print >> sys.stderr, 'Unhandled revision: Reconcile'
+            elif r.Type == constants.wdRevisionReplace:           print >> sys.stderr, 'Unhandled revision: Replace'
+            elif r.Type == constants.wdRevisionSectionProperty:   print >> sys.stderr, 'Unhandled revision: Section Property'
+            elif r.Type == constants.wdRevisionStyle:             print >> sys.stderr, 'Unhandled revision: Style'
+            elif r.Type == constants.wdRevisionStyleDefinition:   print >> sys.stderr, 'Unhandled revision: Style Definition'
+            elif r.Type == constants.wdRevisionTableProperty:     print >> sys.stderr, 'Unhandled revision: Table Property'
+            else:                                                 print >> sys.stderr, 'Unexpected revision: {}'.format(r.Type)
+            yield i + 1
+        self.doc.TrackRevisions = track_revisions
+
 
 class Presentation(object):
     '''A minimial wrapper for managing PowerPoint through the Component Object Model (COM).
