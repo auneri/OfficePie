@@ -1,3 +1,10 @@
+#!/usr/bin/env python
+
+'''
+\author Ali Uneri
+\date 2014-06-20
+'''
+
 import sys
 from cStringIO import StringIO
 
@@ -8,6 +15,13 @@ from win32com.client.gencache import EnsureDispatch
 class Document(object):
     '''A minimial wrapper for managing Word through the Component Object Model (COM).
     See http://msdn.microsoft.com/en-us/library/ff837519(v=office.15).aspx.
+
+    >>> d = Document()
+    >>> for i in range(3):
+    >>>     paragraph = d.doc.Paragraphs.Add(d.doc.Paragraphs(d.doc.Paragraphs.Count).Range)
+    >>>     paragraph.Range.Text = 'Paragraph {}\n'.format(d.doc.Paragraphs.Count - 1)
+    >>> d.doc.SaveAs('/path/to/file.docx')
+    >>> del d
     '''
 
     def __init__(self, path=None, visible=True):
@@ -64,12 +78,13 @@ class Document(object):
 
 class Presentation(object):
     '''A minimial wrapper for managing PowerPoint through the Component Object Model (COM).
-    >>> p = Presentation()
-    >>> p.set_template()
-    >>> slide = p.presentation.Slides.Add(p.presentation.Slides.Count + 1, constants.ppLayoutBlank)
-    >>> p.presentation.SaveAs('/path/to/presentation.pptx')
-    >>> del p
     See http://msdn.microsoft.com/en-us/library/ff743835(v=office.15).aspx.
+
+    >>> p = Presentation()
+    >>> p.set_template('istar')
+    >>> slide = p.ppt.Slides.Add(p.ppt.Slides.Count + 1, constants.ppLayoutBlank)
+    >>> p.ppt.SaveAs('/path/to/file.pptx')
+    >>> del p
     '''
 
     def __init__(self, path=None, version=15.0):
