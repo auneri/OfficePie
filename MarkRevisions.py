@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# pyinstaller --clean --name=MarkRevisions-win64 --onefile --windowed --icon=/path/to/trekLogoIcon.ico MarkRevisions.py
+# pyinstaller --clean --name=MarkRevisions-win64 --onefile --windowed --icon=icon.ico MarkRevisions.py
 
 import argparse
 import os
@@ -9,7 +9,7 @@ from PySide import QtGui
 from PythonTools.msoffice import Document
 
 
-class Window(QtGui.QDialog):
+class Window(QtGui.QWidget):
 
     def __init__(self, parent=None):
         super(Window, self).__init__(parent)
@@ -35,12 +35,31 @@ class Window(QtGui.QDialog):
         layout.setColumnStretch(1,1)
         self.setLayout(layout)
 
+        self.setAcceptDrops(True)
+        self.setAutoFillBackground(True)
         self.setWindowTitle('Mark Revisions')
         self.resize(0,0)
 
         input_select.clicked.connect(self.set_input)
         output_select.clicked.connect(self.set_output)
         mark.clicked.connect(self.mark)
+
+    def dragEnterEvent(self, event):
+        if event.mimeData().urls() and event.mimeData().urls()[0].toLocalFile().endswith('.docx'):
+            self.setBackgroundRole(QtGui.QPalette.Highlight)
+            event.accept()
+        else:
+            event.ignore()
+
+    def dragLeaveEvent(self, event):
+        self.setBackgroundRole(QtGui.QPalette.Window)
+        event.accept()
+
+    def dropEvent(self, event):
+        self.setBackgroundRole(QtGui.QPalette.Window)
+        path = event.mimeData().urls()[0].toLocalFile()
+        self.input_path.setText(os.path.normpath(path))
+        event.accept()
 
     def set_input(self):
         path, _ = QtGui.QFileDialog.getOpenFileName(self, 'Select input document', self.input_path.text(), 'Word Documents (*.docx)')
