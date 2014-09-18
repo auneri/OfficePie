@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# pyinstaller --clean --name=MarkRevisions-win64 --onefile --windowed --icon=icon.ico MarkRevisions.py
+# pyinstaller --clean --name=MarkRevisions --onefile --windowed --icon=icon.ico MarkRevisions.py
 
 import argparse
 import os
