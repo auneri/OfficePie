@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 '''
-\author Ali Uneri
-\date 2014-06-20
+@author Ali Uneri
+@date 2014-06-20
 '''
 
 import sys
