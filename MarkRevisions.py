@@ -5,7 +5,7 @@
 import argparse
 import os
 import sys
-from PySide import QtGui
+from PyQt4 import QtGui
 from PythonTools.msoffice import Document
 
 
