@@ -109,7 +109,7 @@ class PowerPoint(Office):
 
     >>> p = PowerPoint()
     >>> p.set_template('istar')
-    >>> slide = p.doc.Slides.Add(p.doc.Slides.Count + 1, constants.ppLayoutBlank)
+    >>> slide = p.add_slide()
     >>> p.doc.SaveAs('/path/to/file.pptx')
     >>> del p
     '''
@@ -139,6 +139,29 @@ class PowerPoint(Office):
             body.Font.Name = 'Arial'
             body.Font.Color.RGB = rgb(255, 255, 255)
             body.ParagraphFormat.Bullet.Type = constants.ppBulletNone
+
+    def add_slide(self, type=None):
+        if type is None:
+            type = constants.ppLayoutBlank
+        return self.doc.Slides.Add(self.doc.Slides.Count + 1, type)
+
+    def add_text(self, text, position, size, slide=-1):
+        if slide == -1:
+            slide = self.doc.Slides.Count
+        shapes = self.doc.Slides(slide).Shapes
+        shape = shapes.AddTextbox(Orientation=0x1, Left=inch(position[0]), Top=inch(position[1]), Width=inch(size[0]), Height=inch(size[1]))
+        shape.TextFrame.WordWrap = False
+        shape.TextFrame.TextRange.Text = text
+        shape.TextFrame.TextRange.Font.Name = 'Arial'
+        shape.TextFrame.TextRange.Font.Color.ObjectThemeColor = constants.msoThemeColorDark1
+        return shape
+
+    def add_image(self, image, position, size, slide=-1):
+        if slide == -1:
+            slide = self.doc.Slides.Count
+        shapes = self.doc.Slides(slide).Shapes
+        shape = shapes.AddPicture(FileName=image, LinkToFile=False, SaveWithDocument=True, Left=inch(position[0]), Top=inch(position[1]), Width=inch(size[0]), Height=inch(size[1]))
+        return shape
 
 
 def inch(value):
