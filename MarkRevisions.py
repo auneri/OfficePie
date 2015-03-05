@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 
 '''
-pyinstaller --clean --name=MarkRevisions --onefile --windowed --icon=icon.ico MarkRevisions.py
+On Windows, Lib/site-packages/pywin32_system32 need to be in PATH.
+pyinstaller --clean --name=MarkRevisions --onefile --windowed --icon=MarkRevisions.ico MarkRevisions.py
 '''
 
 import argparse
 import os
 import sys
 from PyQt4 import QtGui
-from PythonTools.msoffice import Document
+from PythonTools.msoffice import Word
 
 
 class Window(QtGui.QWidget):
@@ -74,11 +75,11 @@ class Window(QtGui.QWidget):
             self.output_path.setText(os.path.normpath(path))
 
     def mark(self):
-        d = Document(self.input_path.text(), visible=False)
-        self.progress.setMaximum(d.doc.Revisions.Count)
-        for n in d.mark_revisions(self.strike_deletions.isChecked()):
+        w = Word(self.input_path.text())
+        self.progress.setMaximum(w.doc.Revisions.Count)
+        for n in w.mark_revisions(self.strike_deletions.isChecked()):
             self.progress.setValue(n)
-        d.doc.SaveAs(self.output_path.text())
+        w.doc.SaveAs(self.output_path.text())
         self.progress.setValue(0)
 
 
@@ -90,12 +91,12 @@ if __name__ == '__main__':
         parser.add_argument('-rd', '--strike-deletions', nargs='?', const=True, default=False, type=int, help='Strike deletions instead of removing them')
         args = parser.parse_args()
 
-        d = Document(args.input, visible=False)
-        N = d.doc.Revisions.Count
-        for n in d.mark_revisions(args.strike_deletions):
+        w = Word(args.input)
+        N = w.doc.Revisions.Count
+        for n in w.mark_revisions(args.strike_deletions):
             sys.stdout.write('\rMarking... {:.0f}%'.format(100.0 * n / N))
             sys.stdout.flush()
-        d.doc.SaveAs(args.output)
+        w.doc.SaveAs(args.output)
     else:
         app = QtGui.QApplication(sys.argv)
         window = Window()
