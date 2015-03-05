@@ -3,38 +3,65 @@
 '''
 @author Ali Uneri
 @date 2014-06-20
+
+@todo(auneri1) Cleanup based on initialization routine.
 '''
 
+import os
 import sys
 from cStringIO import StringIO
-
-from win32com.client import constants, Dispatch, makepy
+from pythoncom import CreateBindCtx, GetRunningObjectTable
+from win32com.client import constants, GetObject, makepy
 from win32com.client.gencache import EnsureDispatch
 
 
-class Document(object):
-    '''A minimial wrapper for managing Word through the Component Object Model (COM).
-    See http://msdn.microsoft.com/en-us/library/ff837519(v=office.15).aspx.
+class Office(object):
 
-    >>> d = Document()
+    def __init__(self, version, filepath):
+        self.doc = None
+        self._proxy('Microsoft Office {:.1f} Object Library'.format(version))
+        if filepath is not None:
+            context = CreateBindCtx(0)
+            for moniker in GetRunningObjectTable():
+                if filepath == os.path.abspath(moniker.GetDisplayName(context, None)):
+                    self.doc = GetObject(filepath)
+
+    def _proxy(self, name=''):
+        '''Ensure generation of named static COM proxy upon dispatch.'''
+        stdout = sys.stdout
+        sys.stdout = StringIO()
+        sys.argv = ['', '-i', name]
+        makepy.main()
+        output = sys.stdout.getvalue()
+        sys.stdout.close()
+        sys.stdout = stdout
+        exec('\n'.join(output.split('\n')[3:-1]).replace(' >>> ', ''))
+
+
+class Word(Office):
+    '''A minimial wrapper for managing Word through the Component Object Model (COM).
+    See http://msdn.microsoft.com/en-us/library/ff837519.aspx.
+
+    >>> w = Word()
     >>> for i in range(3):
-    >>>     paragraph = d.doc.Paragraphs.Add(d.doc.Paragraphs(d.doc.Paragraphs.Count).Range)
-    >>>     paragraph.Range.Text = 'Paragraph {}\n'.format(d.doc.Paragraphs.Count - 1)
-    >>> d.doc.SaveAs('/path/to/file.docx')
-    >>> del d
+    >>>     paragraph = w.doc.Paragraphs.Add(w.doc.Paragraphs(w.doc.Paragraphs.Count).Range)
+    >>>     paragraph.Range.Text = 'Paragraph {}\n'.format(w.doc.Paragraphs.Count - 1)
+    >>> w.doc.SaveAs('/path/to/file.docx')
+    >>> del w
     '''
 
-    def __init__(self, path=None, visible=True):
-        self.application = EnsureDispatch('Word.Application')
-        self.application.Visible = visible
-        if path:
-            self.doc = self.application.Documents.Open(path)
+    def __init__(self, filepath=None, visible=None, version=15.0):
+        super(Word, self).__init__(version, filepath)
+        self._proxy('Microsoft Word {:.1f} Object Library'.format(version))
+        if self.doc is not None:
+            return
+        app = EnsureDispatch('Word.Application')
+        if visible is not None:
+            app.Visible = visible
+        if filepath is not None:
+            self.doc = app.Documents.Open(filepath)
         else:
-            self.doc = self.application.Documents.Add()
-
-    def __del__(self):
-        self.doc.Close(False)
-        self.application.Quit()
+            self.doc = app.Documents.Add()
 
     def mark_revisions(self, strike_deletions=False):
         '''Convert tracked changes to marked revisions.'''
@@ -76,32 +103,29 @@ class Document(object):
         self.doc.TrackRevisions = track_revisions
 
 
-class Presentation(object):
+class PowerPoint(Office):
     '''A minimial wrapper for managing PowerPoint through the Component Object Model (COM).
-    See http://msdn.microsoft.com/en-us/library/ff743835(v=office.15).aspx.
+    See http://msdn.microsoft.com/en-us/library/ff743835.aspx.
 
-    >>> p = Presentation()
+    >>> p = PowerPoint()
     >>> p.set_template('istar')
-    >>> slide = p.ppt.Slides.Add(p.ppt.Slides.Count + 1, constants.ppLayoutBlank)
-    >>> p.ppt.SaveAs('/path/to/file.pptx')
+    >>> slide = p.doc.Slides.Add(p.doc.Slides.Count + 1, constants.ppLayoutBlank)
+    >>> p.doc.SaveAs('/path/to/file.pptx')
     >>> del p
     '''
 
-    def __init__(self, path=None, version=15.0):
-        win32com('Microsoft Office {:.1f} Object Library'.format(version))
-        win32com('Microsoft PowerPoint {:.1f} Object Library'.format(version))
-        self.application = Dispatch('PowerPoint.Application')
-        self.application.Visible = True
-        if path:
-            self.ppt = self.application.Presentations.Open(path)
+    def __init__(self, filepath=None, visible=None, version=15.0):
+        super(PowerPoint, self).__init__(version, filepath)
+        self._proxy('Microsoft PowerPoint {:.1f} Object Library'.format(version))
+        if self.doc is not None:
+            return
+        app = EnsureDispatch('PowerPoint.Application')
+        if visible is not None:
+            app.Visible = visible
+        if filepath is not None:
+            self.doc = app.Presentations.Open(filepath)
         else:
-            self.ppt = self.application.Presentations.Add()
-
-    def __del__(self):
-        from pythoncom import CoUninitialize
-        self.ppt.Close()
-        self.application.Quit()
-        CoUninitialize()
+            self.doc = app.Presentations.Add()
 
     def set_template(self, template='istar'):
         if template == 'istar':
@@ -123,15 +147,3 @@ def inch(value):
 
 def rgb(r, g, b):
     return r + (g * 256) + (b * 256 ** 2)
-
-
-def win32com(name=''):
-    '''Ensure generation of named static COM proxy upon dispatch.'''
-    stdout = sys.stdout
-    sys.stdout = StringIO()
-    sys.argv = ['', '-i', name]
-    makepy.main()
-    output = sys.stdout.getvalue()
-    sys.stdout.close()
-    sys.stdout = stdout
-    exec('\n'.join(output.split('\n')[3:-1]).replace(' >>> ', ''))
