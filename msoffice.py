@@ -18,15 +18,30 @@ from win32com.client.gencache import EnsureDispatch
 
 
 class Office(object):
+    '''A minimial wrapper for managing Microsoft Office documents through Component Object Model (COM).
+    See https://msdn.microsoft.com/en-us/library/dn833103.aspx.
+    '''
 
-    def __init__(self, version, filepath):
-        self.doc = None
+    def __init__(self, application, document, filepath=None, visible=None, version=15.0):
         self._proxy('Microsoft Office {:.1f} Object Library'.format(version))
-        if filepath is not None:
-            context = CreateBindCtx(0)
-            for moniker in GetRunningObjectTable():
-                if filepath == os.path.abspath(moniker.GetDisplayName(context, None)):
-                    self.doc = GetObject(filepath)
+        self._proxy('Microsoft {} {:.1f} Object Library'.format(application, version))
+        self.app = EnsureDispatch('{}.Application'.format(application))
+        if visible is not None:
+            self.app.Visible = visible
+        if filepath is not None and os.path.isfile(filepath):
+            self.doc = self._get_open_file(filepath)
+            if self.doc is None:
+                self.doc = getattr(self.app, document).Open(filepath)
+        else:
+            self.doc = getattr(self.app, document).Add()
+            if filepath is not None:
+                self.doc.SaveAs(filepath)
+
+    def _get_open_file(self, filepath):
+        context = CreateBindCtx(0)
+        for moniker in GetRunningObjectTable():
+            if filepath == os.path.abspath(moniker.GetDisplayName(context, None)):
+                return GetObject(filepath)
 
     def _proxy(self, name=''):
         '''Ensure generation of named static COM proxy upon dispatch.'''
@@ -41,29 +56,16 @@ class Office(object):
 
 
 class Word(Office):
-    '''A minimial wrapper for managing Word through the Component Object Model (COM).
-    See http://msdn.microsoft.com/en-us/library/ff837519.aspx.
-
+    '''
     >>> w = Word()
     >>> for i in range(3):
     >>>     paragraph = w.doc.Paragraphs.Add(w.doc.Paragraphs(w.doc.Paragraphs.Count).Range)
     >>>     paragraph.Range.Text = 'Paragraph {}\n'.format(w.doc.Paragraphs.Count - 1)
     >>> w.doc.SaveAs('/path/to/file.docx')
-    >>> del w
     '''
 
-    def __init__(self, filepath=None, visible=None, version=15.0):
-        super(Word, self).__init__(version, filepath)
-        self._proxy('Microsoft Word {:.1f} Object Library'.format(version))
-        if self.doc is not None:
-            return
-        app = EnsureDispatch('Word.Application')
-        if visible is not None:
-            app.Visible = visible
-        if filepath is not None:
-            self.doc = app.Documents.Open(filepath)
-        else:
-            self.doc = app.Documents.Add()
+    def __init__(self, *args, **kwargs):
+        super(Word, self).__init__('Word', 'Documents', *args, **kwargs)
 
     def mark_revisions(self, strike_deletions=False):
         '''Convert tracked changes to marked revisions.'''
@@ -105,29 +107,26 @@ class Word(Office):
         self.doc.TrackRevisions = track_revisions
 
 
-class PowerPoint(Office):
-    '''A minimial wrapper for managing PowerPoint through the Component Object Model (COM).
-    See http://msdn.microsoft.com/en-us/library/ff743835.aspx.
+class Excel(Office):
+    '''
+    >>> e = Excel()
+    >>> e.doc.SaveAs('/path/to/file.xlsx')
+    '''
 
+    def __init__(self, *args, **kwargs):
+        super(Excel, self).__init__('Excel', 'Workbooks', *args, **kwargs)
+
+
+class PowerPoint(Office):
+    '''
     >>> p = PowerPoint()
     >>> p.set_template('istar')
     >>> slide = p.add_slide()
     >>> p.doc.SaveAs('/path/to/file.pptx')
-    >>> del p
     '''
 
-    def __init__(self, filepath=None, visible=None, version=15.0):
-        super(PowerPoint, self).__init__(version, filepath)
-        self._proxy('Microsoft PowerPoint {:.1f} Object Library'.format(version))
-        if self.doc is not None:
-            return
-        app = EnsureDispatch('PowerPoint.Application')
-        if visible is not None:
-            app.Visible = visible
-        if filepath is not None:
-            self.doc = app.Presentations.Open(filepath)
-        else:
-            self.doc = app.Presentations.Add()
+    def __init__(self, *args, **kwargs):
+        super(PowerPoint, self).__init__('PowerPoint', 'Presentations', *args, **kwargs)
 
     def set_template(self, template):
         if template == 'istar':
