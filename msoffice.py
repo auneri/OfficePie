@@ -2,7 +2,6 @@
 
 '''
 @author Ali Uneri
-@date 2014-06-20
 
 @todo(auneri1) Set title and text font sizes.
 @todo(auneri1) Add spacing (relative to font size) before first level indentation.
