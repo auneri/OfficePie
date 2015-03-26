@@ -18,7 +18,7 @@ from win32com.client.gencache import EnsureDispatch
 
 class Office(object):
     '''A minimial wrapper for managing Microsoft Office documents through Component Object Model (COM).
-    See https://msdn.microsoft.com/en-us/library/dn833103.aspx.
+    See https://msdn.microsoft.com/en-us/library/office/dn833103.aspx.
     '''
 
     def __init__(self, application, document, filepath=None, visible=None, version=15.0):
@@ -65,6 +65,12 @@ class Word(Office):
 
     def __init__(self, *args, **kwargs):
         super(Word, self).__init__('Word', 'Documents', *args, **kwargs)
+
+    def set_template(self, template):
+        if template == 'PMB':
+            pass
+        else:
+            raise NotImplementedError('Available templates: PMB')
 
     def mark_revisions(self, strike_deletions=False):
         '''Convert tracked changes to marked revisions.'''
