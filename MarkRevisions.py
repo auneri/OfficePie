@@ -9,7 +9,7 @@ import argparse
 import os
 import sys
 from PyQt4 import QtGui
-from PythonTools.msoffice import Word
+from PythonTools.helpers.Office import Word
 
 
 class Window(QtGui.QWidget):
