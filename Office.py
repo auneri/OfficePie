@@ -177,11 +177,17 @@ class PowerPoint(Office):
         shape.TextFrame.TextRange.Font.Color.ObjectThemeColor = constants.msoThemeColorDark1
         return shape
 
-    def add_image(self, image, position, size, slide=-1):
-        if slide == -1:
+    def add_image(self, image, position, size, slide=None):
+        if slide is None:
+            slide = self.app.ActiveWindow.View.Slide.SlideNumber
+        elif slide == -1:
+            self.add_slide()
             slide = self.doc.Slides.Count
         shapes = self.doc.Slides(slide).Shapes
-        shape = shapes.AddPicture(FileName=image, LinkToFile=False, SaveWithDocument=True, Left=inch(position[0]), Top=inch(position[1]), Width=inch(size[0]), Height=inch(size[1]))
+        if size is None:
+            shape = shapes.AddPicture(FileName=image, LinkToFile=False, SaveWithDocument=True, Left=inch(position[0]), Top=inch(position[1]))
+        else:
+            shape = shapes.AddPicture(FileName=image, LinkToFile=False, SaveWithDocument=True, Left=inch(position[0]), Top=inch(position[1]), Width=inch(size[0]), Height=inch(size[1]))
         return shape
 
 
