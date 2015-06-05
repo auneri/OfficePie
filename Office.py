@@ -1,12 +1,8 @@
 #!/usr/bin/env python
 
-'''
-@author Ali Uneri
-
-@todo(auneri1) Set title and text font sizes.
-@todo(auneri1) Add spacing (relative to font size) before first level indentation.
-@todo(auneri1) Cleanup based on initialization routine.
-'''
+# TODO(auneri1) Set title and text font sizes.
+# TODO(auneri1) Add spacing (relative to font size) before first level indentation.
+# TODO(auneri1) Cleanup based on initialization routine.
 
 import os
 import sys
@@ -14,6 +10,8 @@ from cStringIO import StringIO
 from pythoncom import CreateBindCtx, GetRunningObjectTable
 from win32com.client import constants, GetObject, makepy
 from win32com.client.gencache import EnsureDispatch
+
+__author__ = 'Ali Uneri'
 
 
 class Office(object):
