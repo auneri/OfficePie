@@ -175,7 +175,7 @@ class PowerPoint(Office):
         shape.TextFrame.TextRange.Font.Color.ObjectThemeColor = constants.msoThemeColorDark1
         return shape
 
-    def add_image(self, image, position, size, slide=None):
+    def add_image(self, image, position, size, slide=None, **kwargs):
         if slide is None:
             slide = self.app.ActiveWindow.View.Slide.SlideNumber
         elif slide == -1:
