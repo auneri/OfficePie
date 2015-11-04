@@ -71,10 +71,10 @@ def main():
     body.TextFrame.TextRange.ParagraphFormat.Bullet.Type = constants.ppBulletNone
 
     # add a slide with "Title and Content"
-    slide = p.add_slide(constants.ppLayoutObject)
+    p.add_slide(constants.ppLayoutObject)
 
     # customize text box defaults
-    textbox = slide.Shapes.AddTextbox(constants.msoTextOrientationHorizontal, inch(0), inch(0), inch(1), inch(1))
+    textbox = p.add_text('', (0,0))
     textbox.TextFrame.MarginLeft = inch(0.05)
     textbox.TextFrame.MarginRight = inch(0.05)
     textbox.TextFrame.MarginTop = inch(0.05)
