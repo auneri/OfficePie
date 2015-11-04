@@ -128,15 +128,12 @@ class PowerPoint(Office):
             type = constants.ppLayoutBlank
         return self.doc.Slides.Add(self.doc.Slides.Count + 1, type)
 
-    def add_text(self, text, position, size, slide=-1):
+    def add_text(self, text, position, size=(0,0), slide=-1):
         if slide == -1:
             slide = self.doc.Slides.Count
         shapes = self.doc.Slides(slide).Shapes
-        shape = shapes.AddTextbox(Orientation=0x1, Left=inch(position[0]), Top=inch(position[1]), Width=inch(size[0]), Height=inch(size[1]))
-        shape.TextFrame.WordWrap = False
+        shape = shapes.AddTextbox(Orientation=constants.msoTextOrientationHorizontal, Left=inch(position[0]), Top=inch(position[1]), Width=inch(size[0]), Height=inch(size[1]))
         shape.TextFrame.TextRange.Text = text
-        shape.TextFrame.TextRange.Font.Name = 'Arial'
-        shape.TextFrame.TextRange.Font.Color.ObjectThemeColor = constants.msoThemeColorDark1
         return shape
 
     def add_image(self, image, position, size, slide=None, **kwargs):
