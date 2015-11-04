@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 '''
-On Windows, Lib/site-packages/pywin32_system32 need to be in PATH.
+To create a portable application, run
 pyinstaller --clean --name=MarkRevisions --onefile --windowed --icon=MarkRevisions.ico MarkRevisions.py
 '''
 
@@ -10,6 +10,8 @@ import os
 import sys
 from PyQt4 import QtGui
 from PythonTools.helpers.Office import Word
+
+__author__ = 'Ali Uneri'
 
 
 class Window(QtGui.QWidget):
