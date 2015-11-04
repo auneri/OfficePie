@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-# TODO(auneri1) Set title and text font sizes.
-# TODO(auneri1) Add spacing (relative to font size) before first level indentation.
 # TODO(auneri1) Cleanup based on initialization routine.
 
 import os
@@ -64,12 +62,6 @@ class Word(Office):
     def __init__(self, *args, **kwargs):
         super(Word, self).__init__('Word', 'Documents', *args, **kwargs)
 
-    def set_template(self, template):
-        if template == 'PMB':
-            pass
-        else:
-            raise NotImplementedError('Available templates: PMB')
-
     def mark_revisions(self, strike_deletions=False):
         '''Convert tracked changes to marked revisions.'''
         track_revisions = self.doc.TrackRevisions
@@ -123,41 +115,13 @@ class Excel(Office):
 class PowerPoint(Office):
     '''
     >>> p = PowerPoint()
-    >>> p.set_template('istar')
     >>> slide = p.add_slide()
+    >>> p.add_text('Slide {}'.format(slide.SlideNumber), (0.2,0.2), slide=slide.SlideNumber)
     >>> p.doc.SaveAs('/path/to/file.pptx')
     '''
 
     def __init__(self, *args, **kwargs):
         super(PowerPoint, self).__init__('PowerPoint', 'Presentations', *args, **kwargs)
-
-    def set_template(self, template):
-        if template == 'istar':
-            self.doc.PageSetup.SlideSize = constants.ppSlideSizeOnScreen16x9
-            self.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorDark1).RGB = rgb(255, 255, 255)    # white
-            self.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorLight1).RGB = rgb(0, 0, 0)         # black
-            self.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorDark2).RGB = rgb(238, 238, 34)     # yellow
-            self.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorLight2).RGB = rgb(0, 0, 0)         # black
-            self.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent1).RGB = rgb(34, 238, 34)    # green
-            self.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent2).RGB = rgb(238, 136, 238)  # magenta
-            self.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent3).RGB = rgb(34, 238, 238)   # cyan
-            self.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent4).RGB = rgb(0, 0, 0)        # black
-            self.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent5).RGB = rgb(0, 0, 0)        # black
-            self.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent6).RGB = rgb(0, 0, 0)        # black
-            self.doc.SlideMaster.Background.Fill.ForeColor.ObjectThemeColor = constants.msoThemeColorLight1
-            for layout in list(self.doc.SlideMaster.CustomLayouts):
-                if layout.Name not in ['Title Slide', 'Title and Content', 'Section Header', 'Title Only', 'Blank']:
-                    layout.Delete()
-            title = self.doc.SlideMaster.TextStyles(constants.ppTitleStyle).TextFrame.TextRange
-            title.Font.Name = 'Garamond'
-            title.Font.Color.ObjectThemeColor = constants.msoThemeColorDark2
-            title.Font.Bold = True
-            body = self.doc.SlideMaster.TextStyles(constants.ppBodyStyle).TextFrame.TextRange
-            body.Font.Name = 'Arial'
-            body.Font.Color.ObjectThemeColor = constants.msoThemeColorDark1
-            body.ParagraphFormat.Bullet.Type = constants.ppBulletNone
-        else:
-            raise NotImplementedError('Available templates: istar')
 
     def add_slide(self, type=None):
         if type is None:
