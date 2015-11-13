@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-# TODO(auneri1) Add spacing (relative to font size) before first level indentation.
-
 '''
 To create a portable application, run
 pyinstaller --clean --name=istarPresentationTemplate --onefile --icon=istarPresentationTemplate.ico istarPresentationTemplate.py
@@ -23,7 +21,7 @@ def main():
     p.doc.PageSetup.SlideSize = constants.ppSlideSizeOnScreen16x9
 
     # remove unused layouts
-    for layout in list(p.doc.SlideMaster.CustomLayouts):
+    for layout in tuple(p.doc.SlideMaster.CustomLayouts):
         if layout.Name not in ['Title Slide', 'Title and Content', 'Section Header', 'Title Only', 'Blank']:
             layout.Delete()
 
@@ -67,7 +65,10 @@ def main():
     body.TextFrame.MarginTop = inch(0.05)
     body.TextFrame.MarginBottom = inch(0.05)
     body.TextFrame.TextRange.Font.Name = 'Arial'
-    body.TextFrame.TextRange.Font.Size = 18
+    for i in xrange(5):
+        size = 18 - (2 * i)
+        body.TextFrame.TextRange.Paragraphs(i + 1).Font.Size = size
+        body.TextFrame.TextRange.Paragraphs(i + 1).ParagraphFormat.SpaceBefore = size / (i + 1)
     body.TextFrame.TextRange.ParagraphFormat.Bullet.Type = constants.ppBulletNone
 
     # add a slide with "Title and Content"
