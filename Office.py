@@ -150,7 +150,9 @@ class PowerPoint(Office):
         return shape
 
 
-def inch(value):
+def inch(value, reverse=False):
+    if reverse:
+        return value / 72.0
     return value * 72
 
 
