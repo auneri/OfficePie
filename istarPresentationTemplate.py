@@ -71,11 +71,13 @@ def main():
     body.TextFrame.MarginTop = inch(margin)
     body.TextFrame.MarginBottom = inch(margin)
     body.TextFrame.TextRange.Font.Name = 'Arial'
-    for i in xrange(5):
-        size = 18 - (2 * i)
-        body.TextFrame.TextRange.Paragraphs(i + 1).Font.Size = size
-        body.TextFrame.TextRange.Paragraphs(i + 1).ParagraphFormat.SpaceBefore = size / (i + 1)
+    for i, paragraph in enumerate(body.TextFrame.TextRange.Paragraphs()):
+        paragraph.Font.Size = 18 - (2 * i)
+        paragraph.ParagraphFormat.SpaceBefore = paragraph.Font.Size / (i + 1)
+        body.TextFrame.Ruler.Levels(i + 1).FirstMargin = inch(indent * i)
+        body.TextFrame.Ruler.Levels(i + 1).LeftMargin = inch(indent / 2.0 + indent * i)
     body.TextFrame.TextRange.ParagraphFormat.Bullet.Type = constants.ppBulletNone
+    body.TextFrame.TextRange.ParagraphFormat.SpaceWithin = 1.0
 
     # add a slide with "Title and Content"
     p.add_slide(constants.ppLayoutObject)
