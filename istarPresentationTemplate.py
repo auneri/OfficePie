@@ -8,7 +8,10 @@ For help in extending this template, see
 https://msdn.microsoft.com/EN-US/library/office/ee861525.aspx
 '''
 
+from __future__ import absolute_import, division, print_function
+
 from win32com.client import constants
+
 from PythonTools.helpers.Office import PowerPoint, inch, rgb
 
 __author__ = 'Ali Uneri'
