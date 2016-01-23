@@ -5,10 +5,14 @@ To create a portable application, run
 pyinstaller --clean --name=MarkRevisions --onefile --windowed --icon=MarkRevisions.ico MarkRevisions.py
 '''
 
+from __future__ import absolute_import, division, print_function
+
 import argparse
 import os
 import sys
+
 from PyQt4 import QtGui
+
 from PythonTools.helpers.Office import Word
 
 __author__ = 'Ali Uneri'
