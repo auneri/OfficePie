@@ -9,6 +9,7 @@ import sys
 
 from pythoncom import CreateBindCtx, GetRunningObjectTable
 from six.moves import StringIO
+from six import string_types
 from win32com.client import constants, GetObject, makepy
 from win32com.client.gencache import EnsureDispatch
 
@@ -116,31 +117,56 @@ class PowerPoint(Office):
     def __init__(self, *args, **kwargs):
         super(PowerPoint, self).__init__('PowerPoint', 'Presentations', *args, **kwargs)
 
-    def add_slide(self, type=None):
-        if type is None:
-            type = constants.ppLayoutBlank
-        return self.doc.Slides.Add(self.doc.Slides.Count + 1, type)
+    def add_slide(self, layout=None):
+        if layout is None:
+            layout = constants.ppLayoutBlank
+        elif isinstance(layout, string_types):
+            layout = eval('constants.ppLayout{}'.format(layout))
+        slide = self.doc.Slides.Add(self.doc.Slides.Count + 1, layout)
+        slide.Select()
+        return slide
 
-    def add_text(self, text, position, size=(0,0), slide=-1):
-        if slide == -1:
-            slide = self.doc.Slides.Count
-        shapes = self.doc.Slides(slide).Shapes
-        shape = shapes.AddTextbox(Orientation=constants.msoTextOrientationHorizontal, Left=inch(position[0]), Top=inch(position[1]), Width=inch(size[0]), Height=inch(size[1]))
+    def add_text(self, text, position, size=(0,0), slide=None):
+        slide = self.get_slide(slide)
+        shape = slide.Shapes.AddTextbox(Orientation=constants.msoTextOrientationHorizontal, Left=inch(position[0]), Top=inch(position[1]), Width=inch(size[0]), Height=inch(size[1]))
         shape.TextFrame.TextRange.Text = text
         return shape
 
     def add_image(self, image, position, size, slide=None, **kwargs):
-        if slide is None:
-            slide = self.app.ActiveWindow.View.Slide.SlideNumber
-        elif slide == -1:
-            self.add_slide()
-            slide = self.doc.Slides.Count
-        shapes = self.doc.Slides(slide).Shapes
+        slide = self.get_slide(slide)
         if size is None:
-            shape = shapes.AddPicture(FileName=image, LinkToFile=False, SaveWithDocument=True, Left=inch(position[0]), Top=inch(position[1]))
+            shape = slide.Shapes.AddPicture(FileName=image, LinkToFile=False, SaveWithDocument=True, Left=inch(position[0]), Top=inch(position[1]))
         else:
-            shape = shapes.AddPicture(FileName=image, LinkToFile=False, SaveWithDocument=True, Left=inch(position[0]), Top=inch(position[1]), Width=inch(size[0]), Height=inch(size[1]))
+            shape = slide.Shapes.AddPicture(FileName=image, LinkToFile=False, SaveWithDocument=True, Left=inch(position[0]), Top=inch(position[1]), Width=inch(size[0]), Height=inch(size[1]))
         return shape
+
+    def get_slide(self, index=None):
+        if index is None:
+            index = self.app.ActiveWindow.View.Slide.SlideNumber
+        elif index < 0:
+            index = self.doc.Slides.Count - index + 1
+        slide = self.doc.Slides(index)
+        slide.Select()
+        return slide
+
+    def move_shape(self, shape, x, y, reference='center', inches=True):
+        references = reference.split()
+        top = references[0]
+        left = references[1] if len(references) > 1 else 'center'
+        if inches:
+            x, y = inch(x), inch(y)
+        if top == 'upper':
+            shape.Top = y
+        elif top == 'center':
+            shape.Top = (self.doc.PageSetup.SlideHeight - shape.Height) / 2 + y
+        elif top == 'lower':
+            shape.Top = self.doc.PageSetup.SlideHeight - shape.Height - y
+        if left == 'left':
+            shape.Left = x
+        elif left == 'center':
+            shape.Left = (self.doc.PageSetup.SlideWidth - shape.Width) / 2 + x
+        elif left == 'right':
+            shape.Left = self.doc.PageSetup.SlideWidth - shape.Width - x
 
 
 def inch(value, reverse=False):
