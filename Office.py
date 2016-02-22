@@ -67,6 +67,11 @@ class Word(Office):
 
     def mark_revisions(self, strike_deletions=False):
         '''Convert tracked changes to marked revisions.'''
+        unhandled_revisions = {eval('constants.wdRevision{}'.format(revision.replace(' ', ''))): revision for revision in (
+            'Cell Deletion', ' Cell Insertion', 'Cell Merge', 'Cell Split', 'Conflict', 'Conflict Delete',
+            'Conflict Insert', 'Display Field', 'Moved From', 'Moved To', 'Paragraph Number', 'Paragraph Property',
+            'Property', 'Reconcile', 'Replace', 'Section Property', 'Style', 'Style Definition', 'Table Property')}
+
         track_revisions = self.doc.TrackRevisions
         self.doc.TrackRevisions = False
         for i, r in enumerate(self.doc.Revisions):
@@ -80,27 +85,12 @@ class Word(Office):
             elif r.Type == constants.wdRevisionInsert:
                 r.Range.Font.ColorIndex = constants.wdBlue
                 r.Accept()
-            elif r.Type == constants.wdNoRevision:                print('Unhandled revision: No Revision', file=sys.stderr)
-            elif r.Type == constants.wdRevisionCellDeletion:      print('Unhandled revision: Cell Deletion', file=sys.stderr)
-            elif r.Type == constants.wdRevisionCellInsertion:     print('Unhandled revision: Cell Insertion', file=sys.stderr)
-            elif r.Type == constants.wdRevisionCellMerge:         print('Unhandled revision: Cell Merge', file=sys.stderr)
-            elif r.Type == constants.wdRevisionCellSplit:         print('Unhandled revision: Cell Split', file=sys.stderr)
-            elif r.Type == constants.wdRevisionConflict:          print('Unhandled revision: Conflict', file=sys.stderr)
-            elif r.Type == constants.wdRevisionConflictDelete:    print('Unhandled revision: Conflict Delete', file=sys.stderr)
-            elif r.Type == constants.wdRevisionConflictInsert:    print('Unhandled revision: Conflict Insert', file=sys.stderr)
-            elif r.Type == constants.wdRevisionDisplayField:      print('Unhandled revision: Display Field', file=sys.stderr)
-            elif r.Type == constants.wdRevisionMovedFrom:         print('Unhandled revision: Moved From', file=sys.stderr)
-            elif r.Type == constants.wdRevisionMovedTo:           print('Unhandled revision: Moved To', file=sys.stderr)
-            elif r.Type == constants.wdRevisionParagraphNumber:   print('Unhandled revision: Paragraph Number', file=sys.stderr)
-            elif r.Type == constants.wdRevisionParagraphProperty: print('Unhandled revision: Paragraph Property', file=sys.stderr)
-            elif r.Type == constants.wdRevisionProperty:          print('Unhandled revision: Property', file=sys.stderr)
-            elif r.Type == constants.wdRevisionReconcile:         print('Unhandled revision: Reconcile', file=sys.stderr)
-            elif r.Type == constants.wdRevisionReplace:           print('Unhandled revision: Replace', file=sys.stderr)
-            elif r.Type == constants.wdRevisionSectionProperty:   print('Unhandled revision: Section Property', file=sys.stderr)
-            elif r.Type == constants.wdRevisionStyle:             print('Unhandled revision: Style', file=sys.stderr)
-            elif r.Type == constants.wdRevisionStyleDefinition:   print('Unhandled revision: Style Definition', file=sys.stderr)
-            elif r.Type == constants.wdRevisionTableProperty:     print('Unhandled revision: Table Property', file=sys.stderr)
-            else:                                                 print('Unexpected revision: {}'.format(r.Type), file=sys.stderr)
+            elif r.Type == constants.wdNoRevision:
+                print('Unhandled revision: No Revision', file=sys.stderr)
+            elif r.Type in unhandled_revisions:
+                print('Unhandled revision: {}'.format(unhandled_revisions[r.Type]), file=sys.stderr)
+            else:
+                print('Unexpected revision type: {}'.format(r.Type), file=sys.stderr)
             yield i + 1
         self.doc.TrackRevisions = track_revisions
 
