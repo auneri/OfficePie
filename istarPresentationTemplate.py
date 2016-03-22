@@ -1,8 +1,13 @@
 #!/usr/bin/env python
 
+# TODO Toggle "Do not compress images in file".
+# TODO Create analogous Word template.
+
 '''
-To create a portable application, run
-pyinstaller --clean --name=istarPresentationTemplate --onefile --icon=istarPresentationTemplate.ico istarPresentationTemplate.py
+PowerPoint template generator for I-STAR presentations.
+
+Creating a portable application requires PyInstaller v3.1.1 and setuptools v19.2:
+    pyinstaller --clean --name=istarPresentationTemplate --onefile --icon=istarPresentationTemplate.ico istarPresentationTemplate.py
 
 For help in extending this template, see
 https://msdn.microsoft.com/EN-US/library/office/ee861525.aspx
@@ -20,10 +25,17 @@ __author__ = 'Ali Uneri'
 def main():
     p = PowerPoint()
 
-    # remove unused layouts
-    for layout in tuple(p.doc.SlideMaster.CustomLayouts):
-        if layout.Name not in ['Title Slide', 'Title and Content', 'Section Header', 'Title Only', 'Blank']:
-            layout.Delete()
+    # use widescreeen format
+    p.doc.PageSetup.SlideSize = constants.ppSlideSizeOnScreen16x9
+    slide_height = inch(p.doc.PageSetup.SlideHeight, reverse=True)
+    slide_width = inch(p.doc.PageSetup.SlideWidth, reverse=True)
+    title_height = 1.0
+    padding = 0.4
+    margin = 0.05
+    indent = 0.4
+
+    # disable "Use Timings"
+    p.doc.SlideShowSettings.AdvanceMode = constants.ppSlideShowManualAdvance
 
     # assign theme colors
     p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorDark1).RGB = rgb(255, 255, 255)    # white
@@ -37,15 +49,6 @@ def main():
     p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent5).RGB = rgb(255, 255, 255)  # white
     p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent6).RGB = rgb(255, 255, 255)  # white
     p.doc.SlideMaster.Background.Fill.ForeColor.ObjectThemeColor = constants.msoThemeColorLight1
-
-    # use widescreeen format
-    p.doc.PageSetup.SlideSize = constants.ppSlideSizeOnScreen16x9
-    slide_height = inch(p.doc.PageSetup.SlideHeight, reverse=True)
-    slide_width = inch(p.doc.PageSetup.SlideWidth, reverse=True)
-    title_height = 1.0
-    padding = 0.4
-    margin = 0.05
-    indent = 0.4
 
     # format slide master title
     title = p.doc.SlideMaster.Shapes(1)
@@ -81,6 +84,11 @@ def main():
         body.TextFrame.Ruler.Levels(i + 1).LeftMargin = inch(indent / 2.0 + indent * i)
     body.TextFrame.TextRange.ParagraphFormat.Bullet.Type = constants.ppBulletNone
     body.TextFrame.TextRange.ParagraphFormat.SpaceWithin = 1.0
+
+    # remove unused layouts
+    for layout in tuple(p.doc.SlideMaster.CustomLayouts):
+        if layout.Name not in ['Title Slide', 'Title and Content', 'Section Header', 'Title Only', 'Blank']:
+            layout.Delete()
 
     # add a slide with "Title and Content"
     p.add_slide(constants.ppLayoutObject)
