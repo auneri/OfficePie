@@ -100,7 +100,7 @@ if __name__ == '__main__':
         w = Word(args.input)
         N = w.doc.Revisions.Count
         for n in w.mark_revisions(args.strike_deletions):
-            sys.stdout.write('\rMarking... {:.0f}%'.format(100.0 * n / N))
+            sys.stdout.write('\rMarking... {:.0f}%'.format(100 * n / N))
             sys.stdout.flush()
         w.doc.SaveAs(args.output)
     else:
