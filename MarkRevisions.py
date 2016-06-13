@@ -94,7 +94,7 @@ if __name__ == '__main__':
         parser = argparse.ArgumentParser(description='Convert tracked changes to marked revisions')
         parser.add_argument('input', help='Input document')
         parser.add_argument('output', help='Output document')
-        parser.add_argument('-rd', '--strike-deletions', nargs='?', const=True, default=False, type=int, help='Strike deletions instead of removing them')
+        parser.add_argument('-sd', '--strike-deletions', nargs='?', const=True, default=False, type=int, help='Strike deletions instead of removing them')
         args = parser.parse_args()
 
         w = Word(args.input)
