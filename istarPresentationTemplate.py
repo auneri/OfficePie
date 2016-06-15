@@ -3,7 +3,7 @@
 # TODO Toggle "Do not compress images in file".
 # TODO Create analogous Word template.
 
-'''
+"""
 PowerPoint template generator for I-STAR presentations.
 
 Creating a portable application requires PyInstaller v3.1.1 and setuptools v19.2:
@@ -11,7 +11,7 @@ Creating a portable application requires PyInstaller v3.1.1 and setuptools v19.2
 
 For help in extending this template, see
 https://msdn.microsoft.com/EN-US/library/office/ee861525.aspx
-'''
+"""
 
 from __future__ import absolute_import, division, print_function
 
