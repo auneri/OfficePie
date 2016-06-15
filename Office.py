@@ -17,9 +17,9 @@ __author__ = 'Ali Uneri'
 
 
 class Office(object):
-    '''A minimial wrapper for managing Microsoft Office documents through Component Object Model (COM).
+    """A minimial wrapper for managing Microsoft Office documents through Component Object Model (COM).
     See https://msdn.microsoft.com/en-us/library/office/dn833103.aspx.
-    '''
+    """
 
     def __init__(self, application, document, filepath=None, visible=None, version=15.0):
         self._proxy('Microsoft Office {:.1f} Object Library'.format(version))
@@ -43,7 +43,7 @@ class Office(object):
                 return GetObject(filepath)
 
     def _proxy(self, name=''):
-        '''Ensure generation of named static COM proxy upon dispatch.'''
+        """Ensure generation of named static COM proxy upon dispatch."""
         stdout = sys.stdout
         sys.stdout = StringIO()
         sys.argv = ['', '-i', name]
@@ -55,19 +55,19 @@ class Office(object):
 
 
 class Word(Office):
-    '''
+    """
     >>> w = Word()
     >>> for i in range(3):
     >>>     paragraph = w.doc.Paragraphs.Add(w.doc.Paragraphs(w.doc.Paragraphs.Count).Range)
     >>>     paragraph.Range.Text = 'Paragraph {}\n'.format(w.doc.Paragraphs.Count - 1)
     >>> w.doc.SaveAs('/path/to/file.docx')
-    '''
+    """
 
     def __init__(self, *args, **kwargs):
         super(Word, self).__init__('Word', 'Documents', *args, **kwargs)
 
     def mark_revisions(self, strike_deletions=False):
-        '''Convert tracked changes to marked revisions.'''
+        """Convert tracked changes to marked revisions."""
         unhandled_revisions = {eval('constants.wdRevision{}'.format(revision.replace(' ', ''))): revision for revision in (
             'Cell Deletion', ' Cell Insertion', 'Cell Merge', 'Cell Split', 'Conflict', 'Conflict Delete',
             'Conflict Insert', 'Display Field', 'Moved From', 'Moved To', 'Paragraph Number', 'Paragraph Property',
@@ -97,22 +97,22 @@ class Word(Office):
 
 
 class Excel(Office):
-    '''
+    """
     >>> e = Excel()
     >>> e.doc.SaveAs('/path/to/file.xlsx')
-    '''
+    """
 
     def __init__(self, *args, **kwargs):
         super(Excel, self).__init__('Excel', 'Workbooks', *args, **kwargs)
 
 
 class PowerPoint(Office):
-    '''
+    """
     >>> p = PowerPoint()
     >>> slide = p.add_slide()
     >>> p.add_text('Slide {}'.format(slide.SlideNumber), (0.2,0.2), slide=slide.SlideNumber)
     >>> p.doc.SaveAs('/path/to/file.pptx')
-    '''
+    """
 
     def __init__(self, *args, **kwargs):
         super(PowerPoint, self).__init__('PowerPoint', 'Presentations', *args, **kwargs)
