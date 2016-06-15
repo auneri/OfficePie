@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
-'''
+"""
 To create a portable application, run
 pyinstaller --clean --name=MarkRevisions --onefile --windowed --icon=MarkRevisions.ico MarkRevisions.py
-'''
+"""
 
 from __future__ import absolute_import, division, print_function
 
