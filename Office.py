@@ -51,7 +51,7 @@ class Office(object):
         output = sys.stdout.getvalue()
         sys.stdout.close()
         sys.stdout = stdout
-        exec('\n'.join(output.split('\n')[3:-1]).replace(' >>> ', ''))
+        exec('\n'.join(output.splitlines()[3:-1]).replace(' >>> ', ''))
 
 
 class Word(Office):
