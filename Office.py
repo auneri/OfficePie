@@ -18,7 +18,7 @@ __author__ = 'Ali Uneri'
 
 class Office(object):
     """A minimial wrapper for managing Microsoft Office documents through Component Object Model (COM).
-    See https://msdn.microsoft.com/en-us/library/office/dn833103.aspx.
+    See https://msdn.microsoft.com/en-us/library/office/jj162978.aspx.
     """
 
     def __init__(self, application, document, filepath=None, visible=None, version=15.0):
