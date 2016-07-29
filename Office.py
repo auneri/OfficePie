@@ -168,6 +168,12 @@ class PowerPoint(Office):
         elif left == 'right':
             shape.Left = self.doc.PageSetup.SlideWidth - shape.Width - x
 
+    def export_slides(self, path):
+        assert os.path.isdir(path), 'Target path must be a directory'
+        for i in range(1, self.doc.Slides.Count + 1):
+            s = self.get_slide(i)
+            s.PublishSlides(path, True, True)
+
 
 def inch(value, reverse=False):
     if reverse:
