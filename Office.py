@@ -7,10 +7,10 @@ from __future__ import absolute_import, division, print_function
 import os
 import sys
 
-from pythoncom import CreateBindCtx, GetRunningObjectTable
+import pythoncom
+import win32com.client
 from six import string_types
-from win32com.client import constants, GetObject, makepy
-from win32com.client.gencache import EnsureDispatch
+from win32com.client import constants, makepy
 
 from ..contextlib import capture
 
@@ -25,7 +25,7 @@ class Office(object):
     def __init__(self, application, document, filepath=None, visible=None, version=15.0):
         self._proxy('Microsoft Office {:.1f} Object Library'.format(version))
         self._proxy('Microsoft {} {:.1f} Object Library'.format(application, version))
-        self.app = EnsureDispatch('{}.Application'.format(application))
+        self.app = win32com.client.gencache.EnsureDispatch('{}.Application'.format(application))
         if visible is not None:
             self.app.Visible = visible
         if filepath is not None and os.path.isfile(filepath):
@@ -38,10 +38,10 @@ class Office(object):
                 self.doc.SaveAs(filepath)
 
     def _get_open_file(self, filepath):
-        context = CreateBindCtx(0)
-        for moniker in GetRunningObjectTable():
+        context = pythoncom.CreateBindCtx(0)
+        for moniker in pythoncom.GetRunningObjectTable():
             if filepath == os.path.abspath(moniker.GetDisplayName(context, None)):
-                return GetObject(filepath)
+                return win32com.client.GetObject(filepath)
 
     def _proxy(self, name=''):
         """Ensure generation of named static COM proxy upon dispatch."""
