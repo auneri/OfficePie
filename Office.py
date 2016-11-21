@@ -8,10 +8,11 @@ import os
 import sys
 
 from pythoncom import CreateBindCtx, GetRunningObjectTable
-from six.moves import StringIO
 from six import string_types
 from win32com.client import constants, GetObject, makepy
 from win32com.client.gencache import EnsureDispatch
+
+from ..contextlib import capture
 
 __author__ = 'Ali Uneri'
 
@@ -44,14 +45,10 @@ class Office(object):
 
     def _proxy(self, name=''):
         """Ensure generation of named static COM proxy upon dispatch."""
-        stdout = sys.stdout
-        sys.stdout = StringIO()
-        sys.argv = ['', '-i', name]
-        makepy.main()
-        output = sys.stdout.getvalue()
-        sys.stdout.close()
-        sys.stdout = stdout
-        exec('\n'.join(output.splitlines()[3:-1]).replace(' >>> ', ''))
+        with capture() as (stdout, _):
+            sys.argv = ['', '-i', name]
+            makepy.main()
+        exec('\n'.join(line.replace(' >>> ', '') for line in stdout.getvalue().splitlines() if line.startswith(' >>> ')))
 
 
 class Word(Office):
