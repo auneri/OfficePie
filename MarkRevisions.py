@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 """
-To create a portable application, run
-pyinstaller --clean --name=MarkRevisions --onefile --windowed --icon=MarkRevisions.ico MarkRevisions.py
+To create a portable application, run:
+    pyinstaller --clean --name=MarkRevisions --onefile --windowed --icon=MarkRevisions.ico MarkRevisions.py
 """
 
 from __future__ import absolute_import, division, print_function
@@ -44,9 +44,9 @@ class Window(QtWidgets.QWidget):
         layout.setColumnStretch(1,1)
         self.setLayout(layout)
 
-        input_select.clicked.connect(self.set_input)
-        output_select.clicked.connect(self.set_output)
-        mark.clicked.connect(self.mark)
+        input_select.clicked.connect(self.on_input_select)
+        output_select.clicked.connect(self.on_output_select)
+        mark.clicked.connect(self.on_mark)
 
         self.setAcceptDrops(True)
         self.setAutoFillBackground(True)
@@ -70,17 +70,17 @@ class Window(QtWidgets.QWidget):
         self.input_path.setText(os.path.normpath(path))
         event.accept()
 
-    def set_input(self):
+    def on_input_select(self):
         path, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Select input document', self.input_path.text(), 'Word Documents (*.docx)')
         if path:
             self.input_path.setText(os.path.normpath(path))
 
-    def set_output(self):
+    def on_output_select(self):
         path, _ = QtWidgets.QFileDialog.getSaveFileName(self, 'Select output document', self.output_path.text(), 'Word Documents (*.docx)')
         if path:
             self.output_path.setText(os.path.normpath(path))
 
-    def mark(self):
+    def on_mark(self):
         w = Word(self.input_path.text())
         self.progress.setMaximum(w.doc.Revisions.Count)
         for n in w.mark_revisions(self.strike_deletions.isChecked()):
@@ -94,7 +94,7 @@ if __name__ == '__main__':
         parser = argparse.ArgumentParser(description='Convert tracked changes to marked revisions')
         parser.add_argument('input', help='Input document')
         parser.add_argument('output', help='Output document')
-        parser.add_argument('-sd', '--strike-deletions', nargs='?', const=True, default=False, type=int, help='Strike deletions instead of removing them')
+        parser.add_argument('--strike-deletions', action='store_true', help='Strike deletions instead of removing them')
         args = parser.parse_args()
 
         w = Word(args.input)
