@@ -63,7 +63,7 @@ class Word(Office):
     def __init__(self, *args, **kwargs):
         super(Word, self).__init__('Word', 'Documents', *args, **kwargs)
 
-    def mark_revisions(self, strike_deletions=False):
+    def mark_revisions(self, author=None, color=constants.wdBlue, strike_deletions=False):
         """Convert tracked changes to marked revisions."""
         unhandled_revisions = {eval('constants.wdRevision{}'.format(revision.replace(' ', ''))): revision for revision in (
             'Cell Deletion', ' Cell Insertion', 'Cell Merge', 'Cell Split', 'Conflict', 'Conflict Delete',
@@ -73,15 +73,17 @@ class Word(Office):
         track_revisions = self.doc.TrackRevisions
         self.doc.TrackRevisions = False
         for i, r in enumerate(self.doc.Revisions):
+            if author is not None and r.Author != author:
+                continue
             if r.Type == constants.wdRevisionDelete:
                 if strike_deletions:
-                    r.Range.Font.ColorIndex = constants.wdBlue
+                    r.Range.Font.ColorIndex = color
                     r.Range.Font.StrikeThrough = True
                     r.Reject()
                 else:
                     r.Accept()
             elif r.Type == constants.wdRevisionInsert:
-                r.Range.Font.ColorIndex = constants.wdBlue
+                r.Range.Font.ColorIndex = color
                 r.Accept()
             elif r.Type == constants.wdNoRevision:
                 print('Unhandled revision: No Revision', file=sys.stderr)
