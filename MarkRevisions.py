@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+# TODO Allow marking individual authors.
+# TODO Customize color.
+# TODO Allow use of theme colors.
+
 """
 To create a portable application, run:
     pyinstaller --clean --name=MarkRevisions --onefile --windowed --icon=MarkRevisions.ico MarkRevisions.py
@@ -20,8 +24,8 @@ __author__ = 'Ali Uneri'
 
 class Window(QtWidgets.QWidget):
 
-    def __init__(self, parent=None):
-        super(Window, self).__init__(parent)
+    def __init__(self, *args, **kwargs):
+        super(Window, self).__init__(*args, **kwargs)
 
         input_select = QtWidgets.QPushButton('...')
         output_select = QtWidgets.QPushButton('...')
