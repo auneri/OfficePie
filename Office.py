@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-# TODO(auneri1) Cleanup based on initialization routine.
-
 from __future__ import absolute_import, division, print_function
 
 import os
@@ -22,7 +20,7 @@ class Office(object):
     See https://msdn.microsoft.com/en-us/library/office/jj162978.aspx.
     """
 
-    def __init__(self, application, document, filepath=None, visible=None, version=15.0):
+    def __init__(self, application, document, filepath=None, visible=None, version=16.0):
         self._proxy('Microsoft Office {:.1f} Object Library'.format(version))
         self._proxy('Microsoft {} {:.1f} Object Library'.format(application, version))
         self.app = win32com.client.gencache.EnsureDispatch('{}.Application'.format(application))
@@ -63,7 +61,16 @@ class Word(Office):
     def __init__(self, *args, **kwargs):
         super(Word, self).__init__('Word', 'Documents', *args, **kwargs)
 
-    def mark_revisions(self, author=None, color=constants.wdBlue, strike_deletions=False):
+    def add_image(self, filepath):
+        paragraph = self.doc.Paragraphs.Add(self.doc.Paragraphs(self.doc.Paragraphs.Count).Range)
+        return self.doc.InlineShapes.AddPicture(FileName=filepath, LinkToFile=False, SaveWithDocument=True, Range=paragraph.Range)
+
+    def add_text(self, text):
+        paragraph = self.doc.Paragraphs.Add(self.doc.Paragraphs(self.doc.Paragraphs.Count).Range)
+        paragraph.Range.Text = text
+        return paragraph
+
+    def mark_revisions(self, author=None, color=None, strike_deletions=False):
         """Convert tracked changes to marked revisions."""
         unhandled_revisions = {eval('constants.wdRevision{}'.format(revision.replace(' ', ''))): revision for revision in (
             'Cell Deletion', ' Cell Insertion', 'Cell Merge', 'Cell Split', 'Conflict', 'Conflict Delete',
@@ -77,13 +84,13 @@ class Word(Office):
                 continue
             if r.Type == constants.wdRevisionDelete:
                 if strike_deletions:
-                    r.Range.Font.ColorIndex = color
+                    r.Range.Font.ColorIndex = constants.wdBlue if color is None else color
                     r.Range.Font.StrikeThrough = True
                     r.Reject()
                 else:
                     r.Accept()
             elif r.Type == constants.wdRevisionInsert:
-                r.Range.Font.ColorIndex = color
+                r.Range.Font.ColorIndex = constants.wdBlue if color is None else color
                 r.Accept()
             elif r.Type == constants.wdNoRevision:
                 print('Unhandled revision: No Revision', file=sys.stderr)
@@ -128,16 +135,16 @@ class PowerPoint(Office):
     def add_text(self, text, position, size=(0,0), slide=None):
         slide = self.get_slide(slide)
         shape = slide.Shapes.AddTextbox(Orientation=constants.msoTextOrientationHorizontal, Left=inch(position[0]), Top=inch(position[1]), Width=inch(size[0]), Height=inch(size[1]))
+        shape.TextFrame.WordWrap = False
         shape.TextFrame.TextRange.Text = text
         return shape
 
-    def add_image(self, image, position, size, slide=None, **kwargs):
+    def add_image(self, filepath, position, size=None, slide=None):
         slide = self.get_slide(slide)
         if size is None:
-            shape = slide.Shapes.AddPicture(FileName=image, LinkToFile=False, SaveWithDocument=True, Left=inch(position[0]), Top=inch(position[1]))
+            return slide.Shapes.AddPicture(FileName=filepath, LinkToFile=False, SaveWithDocument=True, Left=inch(position[0]), Top=inch(position[1]))
         else:
-            shape = slide.Shapes.AddPicture(FileName=image, LinkToFile=False, SaveWithDocument=True, Left=inch(position[0]), Top=inch(position[1]), Width=inch(size[0]), Height=inch(size[1]))
-        return shape
+            return slide.Shapes.AddPicture(FileName=filepath, LinkToFile=False, SaveWithDocument=True, Left=inch(position[0]), Top=inch(position[1]), Width=inch(size[0]), Height=inch(size[1]))
 
     def get_slide(self, index=None):
         if index is None:
