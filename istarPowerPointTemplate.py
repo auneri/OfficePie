@@ -7,7 +7,7 @@
 PowerPoint template generator for I-STAR presentations.
 
 To create a portable application, run:
-    pyinstaller --clean --name=istarPowerPointTemplate --onefile --windowed --icon=istarPowerPointTemplate.ico istarPowerPointTemplate.py
+    pyinstaller istarPowerPointTemplate.spec
 
 For help in extending this template, see
 https://msdn.microsoft.com/EN-US/library/office/ee861525.aspx
