@@ -15,7 +15,7 @@ import argparse
 import os
 import sys
 
-from qtpy import QtGui, QtWidgets
+from qtpy import QtCore, QtGui, QtWidgets
 
 from PythonTools.helpers.Office import Word
 
@@ -30,7 +30,7 @@ class Window(QtWidgets.QWidget):
         input_select = QtWidgets.QPushButton('...')
         output_select = QtWidgets.QPushButton('...')
         self.input_path = QtWidgets.QLabel('input.docx')
-        self.output_path = QtWidgets.QLabel(os.path.normpath(os.path.expanduser('~/Desktop/output.docx')))
+        self.output_path = QtWidgets.QLabel(os.path.abspath(os.path.expanduser('~/Desktop/output.docx')))
         self.strike_deletions = QtWidgets.QCheckBox('Strike Deletions')
         self.progress = QtWidgets.QProgressBar()
         mark = QtWidgets.QPushButton('Mark')
@@ -71,25 +71,27 @@ class Window(QtWidgets.QWidget):
     def dropEvent(self, event):
         self.setBackgroundRole(QtGui.QPalette.Window)
         path = event.mimeData().urls()[0].toLocalFile()
-        self.input_path.setText(os.path.normpath(path))
+        self.input_path.setText(os.path.abspath(path))
         event.accept()
 
     def on_input_select(self):
         path, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Select input document', self.input_path.text(), 'Word Documents (*.docx)')
         if path:
-            self.input_path.setText(os.path.normpath(path))
+            self.input_path.setText(os.path.abspath(path))
 
     def on_output_select(self):
         path, _ = QtWidgets.QFileDialog.getSaveFileName(self, 'Select output document', self.output_path.text(), 'Word Documents (*.docx)')
         if path:
-            self.output_path.setText(os.path.normpath(path))
+            self.output_path.setText(os.path.abspath(path))
 
     def on_mark(self):
         w = Word(self.input_path.text())
         self.progress.setMaximum(w.doc.Revisions.Count)
-        for n in w.mark_revisions(self.strike_deletions.isChecked()):
+        for n in w.mark_revisions(strike_deletions=self.strike_deletions.isChecked()):
             self.progress.setValue(n)
+            QtCore.QCoreApplication.processEvents(QtCore.QEventLoop.AllEvents, 100)
         w.doc.SaveAs(self.output_path.text())
+        w.close(alert=False)
         self.progress.setValue(0)
 
 
