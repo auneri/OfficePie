@@ -35,6 +35,12 @@ class Office(object):
             if filepath is not None:
                 self.doc.SaveAs(filepath)
 
+    def close(self, alert=True):
+        display_alerts = self.app.DisplayAlerts
+        self.app.DisplayAlerts = alert
+        self.doc.Close()
+        self.app.DisplayAlerts = display_alerts
+
     def _get_open_file(self, filepath):
         context = pythoncom.CreateBindCtx(0)
         for moniker in pythoncom.GetRunningObjectTable():
@@ -80,24 +86,23 @@ class Word(Office):
         track_revisions = self.doc.TrackRevisions
         self.doc.TrackRevisions = False
         for i, r in enumerate(self.doc.Revisions):
-            if author is not None and r.Author != author:
-                continue
-            if r.Type == constants.wdRevisionDelete:
-                if strike_deletions:
+            if author is None or r.Author == author:
+                if r.Type == constants.wdRevisionDelete:
+                    if strike_deletions:
+                        r.Range.Font.ColorIndex = constants.wdBlue if color is None else color
+                        r.Range.Font.StrikeThrough = True
+                        r.Reject()
+                    else:
+                        r.Accept()
+                elif r.Type == constants.wdRevisionInsert:
                     r.Range.Font.ColorIndex = constants.wdBlue if color is None else color
-                    r.Range.Font.StrikeThrough = True
-                    r.Reject()
-                else:
                     r.Accept()
-            elif r.Type == constants.wdRevisionInsert:
-                r.Range.Font.ColorIndex = constants.wdBlue if color is None else color
-                r.Accept()
-            elif r.Type == constants.wdNoRevision:
-                print('Unhandled revision: No Revision', file=sys.stderr)
-            elif r.Type in unhandled_revisions:
-                print('Unhandled revision: {}'.format(unhandled_revisions[r.Type]), file=sys.stderr)
-            else:
-                print('Unexpected revision type: {}'.format(r.Type), file=sys.stderr)
+                elif r.Type == constants.wdNoRevision:
+                    print('Unhandled revision: No Revision', file=sys.stderr)
+                elif r.Type in unhandled_revisions:
+                    print('Unhandled revision: {}'.format(unhandled_revisions[r.Type]), file=sys.stderr)
+                else:
+                    print('Unexpected revision type: {}'.format(r.Type), file=sys.stderr)
             yield i + 1
         self.doc.TrackRevisions = track_revisions
 
