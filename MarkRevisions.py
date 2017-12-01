@@ -6,20 +6,24 @@
 
 """
 To create a portable application, run:
-    pyinstaller --clean --name=MarkRevisions --onefile --windowed --icon=MarkRevisions.ico MarkRevisions.py
+    pyinstaller MarkRevisions.spec
 """
 
 from __future__ import absolute_import, division, print_function
 
 import argparse
+import inspect
 import os
 import sys
 
+import qtpy
 from qtpy import QtCore, QtGui, QtWidgets
 
 from PythonTools.helpers.Office import Word
 
 __author__ = 'Ali Uneri'
+
+os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = os.path.abspath(os.path.join(inspect.getfile(qtpy), '..', '..', 'PyQt5', 'Qt', 'plugins'))
 
 
 class Window(QtWidgets.QWidget):
