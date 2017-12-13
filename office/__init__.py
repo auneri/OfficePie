@@ -4,13 +4,13 @@ from __future__ import absolute_import, division, print_function
 
 import os
 import sys
+from contextlib import contextmanager
 
 import pythoncom
 import win32com.client
 from six import string_types
+from six.moves import StringIO
 from win32com.client import constants, makepy
-
-from ..contextlib import capture
 
 __author__ = 'Ali Uneri'
 
@@ -185,6 +185,20 @@ class PowerPoint(Office):
         for i in range(1, self.doc.Slides.Count + 1):
             s = self.get_slide(i)
             s.PublishSlides(path, True, True)
+
+
+@contextmanager
+def capture(stdout_curr=None, stderr_curr=None):
+    stdout_prev, stderr_prev = sys.stdout, sys.stderr
+    if stdout_curr is None:
+        stdout_curr = StringIO()
+    if stderr_curr is None:
+        stderr_curr = StringIO()
+    try:
+        sys.stdout, sys.stderr = stdout_curr, stderr_curr
+        yield stdout_curr, stderr_curr
+    finally:
+        sys.stdout, sys.stderr = stdout_prev, stderr_prev
 
 
 def inch(value, reverse=False):

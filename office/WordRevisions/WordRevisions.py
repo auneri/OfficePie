@@ -19,7 +19,7 @@ import sys
 import qtpy
 from qtpy import QtCore, QtGui, QtWidgets
 
-from PythonTools.helpers.Office import Word
+from office import Word  # noqa: E402, I100, I202
 
 __author__ = 'Ali Uneri'
 

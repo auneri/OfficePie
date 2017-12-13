@@ -17,7 +17,7 @@ from __future__ import absolute_import, division, print_function
 
 from win32com.client import constants
 
-from PythonTools.helpers.Office import PowerPoint, inch, rgb
+from office import inch, PowerPoint, rgb  # noqa: E402, I100, I202
 
 __author__ = 'Ali Uneri'
 
