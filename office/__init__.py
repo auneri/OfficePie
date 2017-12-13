@@ -12,11 +12,10 @@ from six import string_types
 from six.moves import StringIO
 from win32com.client import constants, makepy
 
-__author__ = 'Ali Uneri'
-
 
 class Office(object):
     """A minimial wrapper for managing Microsoft Office documents through Component Object Model (COM).
+
     See https://msdn.microsoft.com/en-us/library/office/jj162978.aspx.
     """
 
@@ -56,11 +55,12 @@ class Office(object):
 
 
 class Word(Office):
-    """
+    """Microsoft Office Word.
+
     >>> w = Word()
     >>> for i in range(3):
     >>>     paragraph = w.doc.Paragraphs.Add(w.doc.Paragraphs(w.doc.Paragraphs.Count).Range)
-    >>>     paragraph.Range.Text = 'Paragraph {}\n'.format(w.doc.Paragraphs.Count - 1)
+    >>>     paragraph.Range.Text = 'Paragraph {}{}'.format(w.doc.Paragraphs.Count - 1, os.linesep)
     >>> w.doc.SaveAs('/path/to/file.docx')
     """
 
@@ -108,7 +108,8 @@ class Word(Office):
 
 
 class Excel(Office):
-    """
+    """Microsoft Office Excel.
+
     >>> e = Excel()
     >>> e.doc.SaveAs('/path/to/file.xlsx')
     """
@@ -118,7 +119,8 @@ class Excel(Office):
 
 
 class PowerPoint(Office):
-    """
+    """Microsoft Office PowerPoint.
+
     >>> p = PowerPoint()
     >>> slide = p.add_slide()
     >>> p.add_text('Slide {}'.format(slide.SlideNumber), (0.2,0.2), slide=slide.SlideNumber)
@@ -137,7 +139,7 @@ class PowerPoint(Office):
         slide.Select()
         return slide
 
-    def add_text(self, text, position, size=(0,0), slide=None):
+    def add_text(self, text, position, size=(0, 0), slide=None):
         slide = self.get_slide(slide)
         shape = slide.Shapes.AddTextbox(Orientation=constants.msoTextOrientationHorizontal, Left=inch(position[0]), Top=inch(position[1]), Width=inch(size[0]), Height=inch(size[1]))
         shape.TextFrame.WordWrap = False

@@ -1,16 +1,12 @@
 #!/usr/bin/env python
 
-# TODO Toggle "Do not compress images in file".
-# TODO Create analogous Word template.
-
 """
-PowerPoint template generator for I-STAR presentations.
+Generates PowerPoint templates.
 
 To create a portable application, run:
     pyinstaller PowerPointTemplate.spec
 
-For help in extending this template, see
-https://msdn.microsoft.com/EN-US/library/office/ee861525.aspx
+For help in extending this template, see https://msdn.microsoft.com/en-us/VBA/VBA-PowerPoint
 """
 
 from __future__ import absolute_import, division, print_function
@@ -23,8 +19,6 @@ from win32com.client import constants
 
 sys.path.insert(0, os.path.abspath(os.path.join(inspect.getfile(inspect.currentframe()), '..', '..', '..')))
 from office import inch, PowerPoint, rgb  # noqa: E402, I100, I202
-
-__author__ = 'Ali Uneri'
 
 
 def main():
@@ -105,7 +99,7 @@ def main():
     slide = p.add_slide(constants.ppLayoutObject)
 
     # customize text box defaults
-    shape = p.add_text('', (0,0))
+    shape = p.add_text('', (0, 0))
     shape.TextFrame.MarginLeft = inch(margin)
     shape.TextFrame.MarginRight = inch(margin)
     shape.TextFrame.MarginTop = inch(margin)

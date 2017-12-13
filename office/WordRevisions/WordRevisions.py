@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
-# TODO Allow marking individual authors.
-# TODO Customize color.
-# TODO Allow use of theme colors.
-
 """
+Converts Word tracked changes to formatted text.
+
 To create a portable application, run:
     pyinstaller WordRevisions.spec
+
+For help in extending this template, see https://msdn.microsoft.com/en-us/VBA/VBA-Word
 """
 
 from __future__ import absolute_import, division, print_function
@@ -21,8 +21,6 @@ from qtpy import QtCore, QtGui, QtWidgets
 
 sys.path.insert(0, os.path.abspath(os.path.join(inspect.getfile(inspect.currentframe()), '..', '..', '..')))
 from office import Word  # noqa: E402, I100, I202
-
-__author__ = 'Ali Uneri'
 
 os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = os.path.abspath(os.path.join(inspect.getfile(qtpy), '..', '..', 'PyQt5', 'Qt', 'plugins'))
 
@@ -50,7 +48,7 @@ class Window(QtWidgets.QWidget):
         layout.addWidget(self.strike_deletions, 2, 0, 1, 2)
         layout.addWidget(self.progress, 3, 0, 1, 2)
         layout.addWidget(mark, 4, 0, 1, 2)
-        layout.setColumnStretch(1,1)
+        layout.setColumnStretch(1, 1)
         self.setLayout(layout)
 
         input_select.clicked.connect(self.on_input_select)
@@ -62,18 +60,18 @@ class Window(QtWidgets.QWidget):
         self.setWindowTitle('Mark Revisions')
         self.show()
 
-    def dragEnterEvent(self, event):
+    def dragEnterEvent(self, event):  # noqa: N802
         if event.mimeData().urls() and event.mimeData().urls()[0].toLocalFile().endswith('.docx'):
             self.setBackgroundRole(QtGui.QPalette.Highlight)
             event.accept()
         else:
             event.ignore()
 
-    def dragLeaveEvent(self, event):
+    def dragLeaveEvent(self, event):  # noqa: N802
         self.setBackgroundRole(QtGui.QPalette.Window)
         event.accept()
 
-    def dropEvent(self, event):
+    def dropEvent(self, event):  # noqa: N802
         self.setBackgroundRole(QtGui.QPalette.Window)
         path = event.mimeData().urls()[0].toLocalFile()
         self.input_path.setText(os.path.abspath(path))
@@ -102,7 +100,7 @@ class Window(QtWidgets.QWidget):
 
 if __name__ == '__main__':
     if len(sys.argv) > 1:
-        parser = argparse.ArgumentParser(description='Convert tracked changes to marked revisions')
+        parser = argparse.ArgumentParser(description='Converts Word tracked changes to formatted text')
         parser.add_argument('input', help='Input document')
         parser.add_argument('output', help='Output document')
         parser.add_argument('--strike-deletions', action='store_true', help='Strike deletions instead of removing them')
