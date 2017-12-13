@@ -6,7 +6,7 @@
 
 """
 To create a portable application, run:
-    pyinstaller MarkRevisions.spec
+    pyinstaller WordRevisions.spec
 """
 
 from __future__ import absolute_import, division, print_function
@@ -19,6 +19,7 @@ import sys
 import qtpy
 from qtpy import QtCore, QtGui, QtWidgets
 
+sys.path.insert(0, os.path.abspath(os.path.join(inspect.getfile(inspect.currentframe()), '..', '..', '..')))
 from office import Word  # noqa: E402, I100, I202
 
 __author__ = 'Ali Uneri'

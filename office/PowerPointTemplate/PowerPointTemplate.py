@@ -7,7 +7,7 @@
 PowerPoint template generator for I-STAR presentations.
 
 To create a portable application, run:
-    pyinstaller istarPowerPointTemplate.spec
+    pyinstaller PowerPointTemplate.spec
 
 For help in extending this template, see
 https://msdn.microsoft.com/EN-US/library/office/ee861525.aspx
@@ -15,8 +15,13 @@ https://msdn.microsoft.com/EN-US/library/office/ee861525.aspx
 
 from __future__ import absolute_import, division, print_function
 
+import inspect
+import os
+import sys
+
 from win32com.client import constants
 
+sys.path.insert(0, os.path.abspath(os.path.join(inspect.getfile(inspect.currentframe()), '..', '..', '..')))
 from office import inch, PowerPoint, rgb  # noqa: E402, I100, I202
 
 __author__ = 'Ali Uneri'
