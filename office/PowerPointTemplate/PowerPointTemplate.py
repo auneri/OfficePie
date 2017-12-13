@@ -1,10 +1,6 @@
 #!/usr/bin/env python
 
-"""
-Generates PowerPoint templates.
-
-To create a portable application, run:
-    pyinstaller PowerPointTemplate.spec
+"""Generates PowerPoint templates.
 
 For help in extending this template, see https://msdn.microsoft.com/en-us/VBA/VBA-PowerPoint
 """

@@ -1,10 +1,6 @@
 #!/usr/bin/env python
 
-"""
-Converts Word tracked changes to formatted text.
-
-To create a portable application, run:
-    pyinstaller WordRevisions.spec
+"""Converts Word tracked changes to formatted text.
 
 For help in extending this template, see https://msdn.microsoft.com/en-us/VBA/VBA-Word
 """
