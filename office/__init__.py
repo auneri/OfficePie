@@ -34,9 +34,9 @@ class Office(object):
             if filepath is not None:
                 self.doc.SaveAs(filepath)
 
-    def close(self, alert=True):
+    def close(self, alert=True, switch=(True, False)):
         display_alerts = self.app.DisplayAlerts
-        self.app.DisplayAlerts = alert
+        self.app.DisplayAlerts = switch[0] if alert else switch[1]
         self.doc.Close()
         self.app.DisplayAlerts = display_alerts
 
@@ -79,6 +79,9 @@ class Word(Office):
         paragraph = self.doc.Paragraphs.Add(self.doc.Paragraphs(self.doc.Paragraphs.Count).Range)
         paragraph.Range.Text = text
         return paragraph
+
+    def close(self, alert=True):
+        super(Word, self).close(alert, switch=(constants.wdAlertsAll, constants.wdAlertsNone))
 
     def mark_revisions(self, author=None, color=None, strike_deletions=False):
         """Convert tracked changes to marked revisions."""
@@ -164,6 +167,9 @@ class PowerPoint(Office):
             return slide.Shapes.AddPicture(FileName=filepath, LinkToFile=False, SaveWithDocument=True, Left=inch(position[0]), Top=inch(position[1]))
         else:
             return slide.Shapes.AddPicture(FileName=filepath, LinkToFile=False, SaveWithDocument=True, Left=inch(position[0]), Top=inch(position[1]), Width=inch(size[0]), Height=inch(size[1]))
+
+    def close(self, alert=True):
+        super(Word, self).close(alert, switch=(constants.ppAlertsAll, constants.ppAlertsNone))
 
     def get_slide(self, index=None):
         if index is None:
