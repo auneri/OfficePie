@@ -123,8 +123,6 @@ def main():
         shape.Fill.ForeColor.ObjectThemeColor = getattr(constants, 'msoThemeColorAccent{}'.format(i))
         shape.Fill.Transparency = 0.5
 
-    return p
-
 
 if __name__ == '__main__':
-    p = main()
+    main()

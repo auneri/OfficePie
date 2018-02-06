@@ -108,6 +108,7 @@ if __name__ == '__main__':
             sys.stdout.write('\rMarking... {:.0f}%'.format(100 * n / N))
             sys.stdout.flush()
         w.doc.SaveAs(args.output)
+        del w
     else:
         app = QtWidgets.QApplication(sys.argv)
         window = Window()

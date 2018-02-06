@@ -67,6 +67,10 @@ class Word(Office):
     def __init__(self, *args, **kwargs):
         super(Word, self).__init__('Word', 'Documents', *args, **kwargs)
 
+    def __del__(self):
+        if len(self.app.Documents) == 0:
+            self.app.Quit()
+
     def add_image(self, filepath):
         paragraph = self.doc.Paragraphs.Add(self.doc.Paragraphs(self.doc.Paragraphs.Count).Range)
         return self.doc.InlineShapes.AddPicture(FileName=filepath, LinkToFile=False, SaveWithDocument=True, Range=paragraph.Range)
@@ -117,6 +121,10 @@ class Excel(Office):
     def __init__(self, *args, **kwargs):
         super(Excel, self).__init__('Excel', 'Workbooks', *args, **kwargs)
 
+    def __del__(self):
+        if len(self.app.Workbooks) == 0:
+            self.app.Quit()
+
 
 class PowerPoint(Office):
     """Microsoft Office PowerPoint.
@@ -129,6 +137,10 @@ class PowerPoint(Office):
 
     def __init__(self, *args, **kwargs):
         super(PowerPoint, self).__init__('PowerPoint', 'Presentations', *args, **kwargs)
+
+    def __del__(self):
+        if len(self.app.Presentations) == 0:
+            self.app.Quit()
 
     def add_slide(self, layout=None):
         if layout is None:
