@@ -31,9 +31,9 @@ def main():
     slide_height = inch(p.doc.PageSetup.SlideHeight, reverse=True)
     slide_width = inch(p.doc.PageSetup.SlideWidth, reverse=True)
     title_height = 1.2
-    padding = 0.5
-    margin = 0.05
-    indent = 0.5
+    padding = 0.6, 0.3
+    margin = 0.1, 0.1
+    indent = 0.75
 
     # disable "Use Timings"
     p.doc.SlideShowSettings.AdvanceMode = constants.ppSlideShowManualAdvance
@@ -53,33 +53,34 @@ def main():
 
     # format slide master title
     title = p.doc.SlideMaster.Shapes(1)
-    title.Left = inch(padding)
-    title.Top = inch(padding)
-    title.Width = inch(slide_width - 2 * padding)
+    title.Left = inch(padding[0])
+    title.Top = inch(padding[1])
+    title.Width = inch(slide_width - 2 * padding[0])
     title.Height = inch(title_height)
-    title.TextFrame.MarginLeft = inch(margin)
-    title.TextFrame.MarginRight = inch(margin)
-    title.TextFrame.MarginTop = inch(margin)
-    title.TextFrame.MarginBottom = inch(margin)
+    title.TextFrame.MarginLeft = inch(margin[0])
+    title.TextFrame.MarginRight = inch(margin[0])
+    title.TextFrame.MarginTop = inch(margin[1])
+    title.TextFrame.MarginBottom = inch(margin[1])
     title.TextFrame.TextRange.Font.Name = 'Garamond'
     title.TextFrame.TextRange.Font.Color.ObjectThemeColor = constants.msoThemeColorAccent1
-    title.TextFrame.TextRange.Font.Size = 32
+    title.TextFrame.TextRange.Font.Size = 36
     title.TextFrame.TextRange.Font.Bold = True
-    title.TextFrame.VerticalAnchor = constants.msoAnchorTop
+    title.TextFrame.VerticalAnchor = constants.msoAnchorMiddle
 
     # format slide master body
     body = p.doc.SlideMaster.Shapes(2)
-    body.Left = inch(padding)
-    body.Top = inch(title_height + padding)
-    body.Width = inch(slide_width - 2 * padding)
-    body.Height = inch(slide_height - 2 * padding - title_height)
-    body.TextFrame.MarginLeft = inch(margin)
-    body.TextFrame.MarginRight = inch(margin)
-    body.TextFrame.MarginTop = inch(margin)
-    body.TextFrame.MarginBottom = inch(margin)
+    body.Left = inch(padding[0])
+    body.Top = inch(title_height + padding[1])
+    body.Width = inch(slide_width - 2 * padding[0])
+    body.Height = inch(slide_height - 2 * padding[1] - title_height)
+    body.TextFrame.MarginLeft = inch(margin[0])
+    body.TextFrame.MarginRight = inch(margin[0])
+    body.TextFrame.MarginTop = inch(margin[1])
+    body.TextFrame.MarginBottom = inch(margin[1])
     body.TextFrame.TextRange.Font.Name = 'Arial'
+    body.TextFrame.VerticalAnchor = constants.msoAnchorTop
     for i, paragraph in enumerate(body.TextFrame.TextRange.Paragraphs()):
-        paragraph.Font.Size = 18 - (2 * i)
+        paragraph.Font.Size = 22 - (2 * i)
         paragraph.ParagraphFormat.SpaceBefore = paragraph.Font.Size / (i + 1)
         body.TextFrame.Ruler.Levels(i + 1).FirstMargin = inch(indent * i)
         body.TextFrame.Ruler.Levels(i + 1).LeftMargin = inch(indent / 2 + indent * i)
@@ -96,12 +97,12 @@ def main():
 
     # customize text box defaults
     shape = p.add_text('', (0, 0))
-    shape.TextFrame.MarginLeft = inch(margin)
-    shape.TextFrame.MarginRight = inch(margin)
-    shape.TextFrame.MarginTop = inch(margin)
-    shape.TextFrame.MarginBottom = inch(margin)
+    shape.TextFrame.MarginLeft = inch(margin[0])
+    shape.TextFrame.MarginRight = inch(margin[0])
+    shape.TextFrame.MarginTop = inch(margin[1])
+    shape.TextFrame.MarginBottom = inch(margin[1])
     shape.TextFrame.TextRange.Font.Name = 'Arial'
-    shape.TextFrame.TextRange.Font.Size = 16
+    shape.TextFrame.TextRange.Font.Size = 20
     shape.SetShapesDefaultProperties()
     shape.Delete()
 
