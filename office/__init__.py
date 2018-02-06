@@ -168,8 +168,10 @@ class PowerPoint(Office):
     def get_slide(self, index=None):
         if index is None:
             index = self.app.ActiveWindow.View.Slide.SlideNumber
-        elif index < 0:
-            index = self.doc.Slides.Count - index + 1
+        elif index >= 0:
+            index += 1
+        else:
+            index += self.doc.Slides.Count + 1
         slide = self.doc.Slides(index)
         slide.Select()
         return slide
