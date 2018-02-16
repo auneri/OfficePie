@@ -154,14 +154,14 @@ class PowerPoint(Office):
         slide.Select()
         return slide
 
-    def add_text(self, text, position, size=(0, 0), slide=None):
+    def add_text(self, text, position=(0, 0), size=(0, 0), slide=None):
         slide = self.get_slide(slide)
         shape = slide.Shapes.AddTextbox(Orientation=constants.msoTextOrientationHorizontal, Left=inch(position[0]), Top=inch(position[1]), Width=inch(size[0]), Height=inch(size[1]))
         shape.TextFrame.WordWrap = False
         shape.TextFrame.TextRange.Text = text
         return shape
 
-    def add_image(self, filepath, position, size=None, slide=None):
+    def add_image(self, filepath, position=(0, 0), size=None, slide=None):
         slide = self.get_slide(slide)
         if size is None:
             return slide.Shapes.AddPicture(FileName=filepath, LinkToFile=False, SaveWithDocument=True, Left=inch(position[0]), Top=inch(position[1]))
