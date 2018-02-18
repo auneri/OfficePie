@@ -64,7 +64,7 @@ def main():
     title.TextFrame.TextRange.Font.Name = 'Garamond'
     title.TextFrame.TextRange.Font.Color.ObjectThemeColor = constants.msoThemeColorAccent1
     title.TextFrame.TextRange.Font.Size = 36
-    title.TextFrame.TextRange.Font.Bold = True
+    title.TextFrame.TextRange.Font.Bold = constants.msoTrue
     title.TextFrame.VerticalAnchor = constants.msoAnchorMiddle
 
     # format slide master body
@@ -120,7 +120,7 @@ def main():
         slide.Shapes.AddShape(constants.msoShapeRectangle, inch(pad), inch((slide_height + pad) / 2), inch((slide_width - pad) / 2 - pad), inch((slide_height - pad) / 2 - pad)),
         slide.Shapes.AddShape(constants.msoShapeRectangle, inch((slide_width + pad) / 2), inch((slide_height + pad) / 2), inch((slide_width - pad) / 2 - pad), inch((slide_height - pad) / 2 - pad))]
     for i, shape in enumerate(shapes, start=1):
-        shape.Line.Visible = False
+        shape.Line.Visible = constants.msoFalse
         shape.Fill.ForeColor.ObjectThemeColor = getattr(constants, 'msoThemeColorAccent{}'.format(i))
         shape.Fill.Transparency = 0.5
 

@@ -34,7 +34,9 @@ class Office(object):
             if filepath is not None:
                 self.doc.SaveAs(filepath)
 
-    def close(self, alert=True, switch=(True, False)):
+    def close(self, alert=True, switch=None):
+        if switch is None:
+            switch = constants.msoTrue, constants.msoFalse
         display_alerts = self.app.DisplayAlerts
         self.app.DisplayAlerts = switch[0] if alert else switch[1]
         self.doc.Close()
@@ -73,7 +75,7 @@ class Word(Office):
 
     def add_image(self, filepath):
         paragraph = self.doc.Paragraphs.Add(self.doc.Paragraphs(self.doc.Paragraphs.Count).Range)
-        return self.doc.InlineShapes.AddPicture(FileName=filepath, LinkToFile=False, SaveWithDocument=True, Range=paragraph.Range)
+        return self.doc.InlineShapes.AddPicture(FileName=filepath, LinkToFile=constants.msoFalse, SaveWithDocument=constants.msoTrue, Range=paragraph.Range)
 
     def add_text(self, text):
         paragraph = self.doc.Paragraphs.Add(self.doc.Paragraphs(self.doc.Paragraphs.Count).Range)
@@ -91,13 +93,13 @@ class Word(Office):
             'Property', 'Reconcile', 'Replace', 'Section Property', 'Style', 'Style Definition', 'Table Property')}
 
         track_revisions = self.doc.TrackRevisions
-        self.doc.TrackRevisions = False
+        self.doc.TrackRevisions = constants.msoFalse
         for i, r in enumerate(self.doc.Revisions):
             if author is None or r.Author == author:
                 if r.Type == constants.wdRevisionDelete:
                     if strike_deletions:
                         r.Range.Font.ColorIndex = constants.wdBlue if color is None else color
-                        r.Range.Font.StrikeThrough = True
+                        r.Range.Font.StrikeThrough = constants.msoTrue
                         r.Reject()
                     else:
                         r.Accept()
@@ -157,16 +159,16 @@ class PowerPoint(Office):
     def add_text(self, text, position=(0, 0), size=(0, 0), slide=None):
         slide = self.get_slide(slide)
         shape = slide.Shapes.AddTextbox(Orientation=constants.msoTextOrientationHorizontal, Left=inch(position[0]), Top=inch(position[1]), Width=inch(size[0]), Height=inch(size[1]))
-        shape.TextFrame.WordWrap = False
+        shape.TextFrame.WordWrap = constants.msoFalse
         shape.TextFrame.TextRange.Text = text
         return shape
 
     def add_image(self, filepath, position=(0, 0), size=None, slide=None):
         slide = self.get_slide(slide)
         if size is None:
-            return slide.Shapes.AddPicture(FileName=filepath, LinkToFile=False, SaveWithDocument=True, Left=inch(position[0]), Top=inch(position[1]))
+            return slide.Shapes.AddPicture(FileName=filepath, LinkToFile=constants.msoFalse, SaveWithDocument=constants.msoTrue, Left=inch(position[0]), Top=inch(position[1]))
         else:
-            return slide.Shapes.AddPicture(FileName=filepath, LinkToFile=False, SaveWithDocument=True, Left=inch(position[0]), Top=inch(position[1]), Width=inch(size[0]), Height=inch(size[1]))
+            return slide.Shapes.AddPicture(FileName=filepath, LinkToFile=constants.msoFalse, SaveWithDocument=constants.msoTrue, Left=inch(position[0]), Top=inch(position[1]), Width=inch(size[0]), Height=inch(size[1]))
 
     def close(self, alert=True):
         super(Word, self).close(alert, switch=(constants.ppAlertsAll, constants.ppAlertsNone))
@@ -206,7 +208,7 @@ class PowerPoint(Office):
             raise IOError('Target path must be a directory')
         for i in range(1, self.doc.Slides.Count + 1):
             s = self.get_slide(i)
-            s.PublishSlides(path, True, True)
+            s.PublishSlides(path, constants.msoTrue, constants.msoTrue)
 
 
 @contextmanager
