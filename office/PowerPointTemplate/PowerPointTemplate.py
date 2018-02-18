@@ -33,7 +33,7 @@ def main():
     title_height = 1.2
     padding = 0.6, 0.3
     margin = 0.1, 0.1
-    indent = 0.75
+    indent = 0.5
 
     # disable "Use Timings"
     p.doc.SlideShowSettings.AdvanceMode = constants.ppSlideShowManualAdvance
@@ -43,12 +43,12 @@ def main():
     p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorLight1).RGB = rgb(0, 0, 0)         # black
     p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorDark2).RGB = rgb(204, 204, 204)    # dirty white
     p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorLight2).RGB = rgb(51, 51, 51)      # dirty black
-    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent1).RGB = rgb(238, 238, 35)   # yellow
+    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent1).RGB = rgb(238, 238, 34)   # yellow
     p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent2).RGB = rgb(238, 136, 238)  # magenta
-    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent3).RGB = rgb(35, 238, 35)    # green
-    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent4).RGB = rgb(35, 238, 238)   # cyan
-    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent5).RGB = rgb(238, 136, 35)   # orange
-    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent6).RGB = rgb(136, 35, 238)   # purple
+    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent3).RGB = rgb(34, 238, 34)    # green
+    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent4).RGB = rgb(34, 238, 238)   # cyan
+    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent5).RGB = rgb(238, 136, 34)   # orange
+    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent6).RGB = rgb(136, 34, 238)   # purple
     p.doc.SlideMaster.Background.Fill.ForeColor.ObjectThemeColor = constants.msoThemeColorLight1
 
     # format slide master title
@@ -77,13 +77,13 @@ def main():
     body.TextFrame.MarginRight = inch(margin[0])
     body.TextFrame.MarginTop = inch(margin[1])
     body.TextFrame.MarginBottom = inch(margin[1])
-    body.TextFrame.TextRange.Font.Name = 'Arial'
+    body.TextFrame.TextRange.Font.Name = 'Calibri'
     body.TextFrame.VerticalAnchor = constants.msoAnchorTop
     for i, paragraph in enumerate(body.TextFrame.TextRange.Paragraphs()):
         paragraph.Font.Size = 22 - (2 * i)
-        paragraph.ParagraphFormat.SpaceBefore = paragraph.Font.Size / (i + 1)
+        paragraph.ParagraphFormat.SpaceBefore = 1.25 * paragraph.Font.Size / (i + 1)
         body.TextFrame.Ruler.Levels(i + 1).FirstMargin = inch(indent * i)
-        body.TextFrame.Ruler.Levels(i + 1).LeftMargin = inch(indent / 2 + indent * i)
+        body.TextFrame.Ruler.Levels(i + 1).LeftMargin = inch(indent * i)
     body.TextFrame.TextRange.ParagraphFormat.Bullet.Type = constants.ppBulletNone
     body.TextFrame.TextRange.ParagraphFormat.SpaceWithin = 1
 
@@ -96,33 +96,41 @@ def main():
     slide = p.add_slide(constants.ppLayoutObject)
 
     # customize text box defaults
-    shape = p.add_text('', (0, 0))
+    shape = p.add_text('Defaults', (1, 1))
     shape.TextFrame.MarginLeft = inch(margin[0])
     shape.TextFrame.MarginRight = inch(margin[0])
     shape.TextFrame.MarginTop = inch(margin[1])
     shape.TextFrame.MarginBottom = inch(margin[1])
-    shape.TextFrame.TextRange.Font.Name = 'Arial'
+    shape.TextFrame.TextRange.Font.Name = 'Calibri'
     shape.TextFrame.TextRange.Font.Size = 20
     shape.SetShapesDefaultProperties()
     shape.Delete()
 
     # customize line defaults
     shape = slide.Shapes.AddLine(inch(1), inch(1), inch(2), inch(2))
-    shape.Line.Weight = 1.5
+    shape.Line.Weight = 2
     shape.SetShapesDefaultProperties()
     shape.Delete()
 
-    slide = p.add_slide(constants.ppLayoutBlank)
+    # customize rectangle defaults
+    shape = slide.Shapes.AddShape(constants.msoShapeRectangle, inch(1), inch(1), inch(2), inch(2))
+    shape.Line.ForeColor.ObjectThemeColor = constants.msoThemeColorAccent1
+    shape.SetShapesDefaultProperties()
+    shape.Delete()
+
     pad = 0.1
     shapes = [
         slide.Shapes.AddShape(constants.msoShapeRectangle, inch(pad), inch(pad), inch((slide_width - pad) / 2 - pad), inch((slide_height - pad) / 2 - pad)),
         slide.Shapes.AddShape(constants.msoShapeRectangle, inch((slide_width + pad) / 2), inch(pad), inch((slide_width - pad) / 2 - pad), inch((slide_height - pad) / 2 - pad)),
         slide.Shapes.AddShape(constants.msoShapeRectangle, inch(pad), inch((slide_height + pad) / 2), inch((slide_width - pad) / 2 - pad), inch((slide_height - pad) / 2 - pad)),
         slide.Shapes.AddShape(constants.msoShapeRectangle, inch((slide_width + pad) / 2), inch((slide_height + pad) / 2), inch((slide_width - pad) / 2 - pad), inch((slide_height - pad) / 2 - pad))]
-    for i, shape in enumerate(shapes, start=1):
+    for i, shape in enumerate(shapes, start=2):
         shape.Line.Visible = constants.msoFalse
         shape.Fill.ForeColor.ObjectThemeColor = getattr(constants, 'msoThemeColorAccent{}'.format(i))
-        shape.Fill.Transparency = 0.5
+        shape.Fill.Transparency = 0.75
+        shape.ZOrder(constants.msoSendToBack)
+
+    return p
 
 
 if __name__ == '__main__':
