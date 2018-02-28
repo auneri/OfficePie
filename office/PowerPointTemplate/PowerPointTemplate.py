@@ -61,10 +61,9 @@ def main():
     title.TextFrame.MarginRight = inch(margin[0])
     title.TextFrame.MarginTop = inch(margin[1])
     title.TextFrame.MarginBottom = inch(margin[1])
-    title.TextFrame.TextRange.Font.Name = 'Garamond'
+    title.TextFrame.TextRange.Font.Name = 'Cambria'
     title.TextFrame.TextRange.Font.Color.ObjectThemeColor = constants.msoThemeColorAccent1
     title.TextFrame.TextRange.Font.Size = 36
-    title.TextFrame.TextRange.Font.Bold = constants.msoTrue
     title.TextFrame.VerticalAnchor = constants.msoAnchorMiddle
 
     # format slide master body
