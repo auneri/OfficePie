@@ -118,6 +118,22 @@ def main():
     shape.SetShapesDefaultProperties()
     shape.Delete()
 
+    # create a sample slide
+    title = 'Lorem Ipsum Dolor Sit\x0bAmet'
+    content = [
+        [1, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'],
+        [2, 'Nam lacinia nisl et ullamcorper luctus'],
+        [1, 'Nunc vel lectus et risus maximus viverra'],
+        [2, 'Morbi eget nulla sagittis, finibus quam sit amet,\x0bcursus ante'],
+        [3, 'Donec luctus mauris vel tortor blandit blandit'],
+        [2, 'Praesent aliquet dolor ut nisl egestas gravida']]
+    slide.Shapes(1).TextFrame.TextRange.Text = title
+    subtitle = slide.Shapes(1).TextFrame.TextRange.Characters(1 + len(title) - 5, 5)
+    subtitle.Font.Color.ObjectThemeColor = constants.msoThemeColorDark1
+    subtitle.Font.Size = 27
+    slide.Shapes(2).TextFrame.TextRange.Text = '\r'.join(text for _, text in content)
+    for i, (indent, _) in enumerate(content, start=1):
+        slide.Shapes(2).TextFrame.TextRange.Paragraphs(i).IndentLevel = indent
     pad = 0.1
     shapes = [
         slide.Shapes.AddShape(constants.msoShapeRectangle, inch(pad), inch(pad), inch((slide_width - pad) / 2 - pad), inch((slide_height - pad) / 2 - pad)),
