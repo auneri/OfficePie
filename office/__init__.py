@@ -4,6 +4,7 @@ from __future__ import absolute_import, division, print_function
 
 import os
 import sys
+import tempfile
 from contextlib import contextmanager
 
 import pythoncom
@@ -206,12 +207,13 @@ class PowerPoint(Office):
         elif left == 'right':
             shape.Left = self.doc.PageSetup.SlideWidth - shape.Width - x
 
-    def export_slides(self, path):
-        if not os.path.isdir(path):
-            raise IOError('Target path must be a directory')
+    def size(self):
+        f = tempfile.NamedTemporaryFile(suffix='.ppt', delete=False)
+        f.close()
         for i in range(1, self.doc.Slides.Count + 1):
-            s = self.get_slide(i)
-            s.PublishSlides(path, constants.msoTrue, constants.msoTrue)
+            self.doc.Slides(i).Export(f.name[:-4], f.name[-3:])
+            print('{:>3}: {:.1f} MB'.format(i, os.path.getsize(f.name) / 1e6))
+        os.remove(f.name)
 
 
 @contextmanager
