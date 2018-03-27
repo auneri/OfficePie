@@ -38,6 +38,10 @@ def main():
     # disable "Use Timings"
     p.doc.SlideShowSettings.AdvanceMode = constants.ppSlideShowManualAdvance
 
+    # assign theme fonts
+    p.doc.SlideMaster.Theme.ThemeFontScheme.MajorFont(constants.msoThemeLatin).Name = 'Cambria'  # headings
+    p.doc.SlideMaster.Theme.ThemeFontScheme.MinorFont(constants.msoThemeLatin).Name = 'Calibri'  # body
+
     # assign theme colors
     p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorDark1).RGB = rgb(255, 255, 255)    # white
     p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorLight1).RGB = rgb(0, 0, 0)         # black
@@ -61,7 +65,6 @@ def main():
     title.TextFrame.MarginRight = inch(margin[0])
     title.TextFrame.MarginTop = inch(margin[1])
     title.TextFrame.MarginBottom = inch(margin[1])
-    title.TextFrame.TextRange.Font.Name = 'Cambria'
     title.TextFrame.TextRange.Font.Color.ObjectThemeColor = constants.msoThemeColorAccent1
     title.TextFrame.TextRange.Font.Size = 36
     title.TextFrame.VerticalAnchor = constants.msoAnchorMiddle
@@ -76,7 +79,6 @@ def main():
     body.TextFrame.MarginRight = inch(margin[0])
     body.TextFrame.MarginTop = inch(margin[1])
     body.TextFrame.MarginBottom = inch(margin[1])
-    body.TextFrame.TextRange.Font.Name = 'Calibri'
     body.TextFrame.VerticalAnchor = constants.msoAnchorTop
     for i, paragraph in enumerate(body.TextFrame.TextRange.Paragraphs()):
         paragraph.Font.Size = 22 - (2 * i)
@@ -100,7 +102,6 @@ def main():
     shape.TextFrame.MarginRight = inch(margin[0])
     shape.TextFrame.MarginTop = inch(margin[1])
     shape.TextFrame.MarginBottom = inch(margin[1])
-    shape.TextFrame.TextRange.Font.Name = 'Calibri'
     shape.TextFrame.TextRange.Font.Size = 20
     shape.SetShapesDefaultProperties()
     shape.Delete()
