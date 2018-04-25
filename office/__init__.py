@@ -23,12 +23,15 @@ class Office(object):
         self._proxy('Microsoft Office {:.1f} Object Library'.format(version))
         self._proxy('Microsoft {} {:.1f} Object Library'.format(application, version))
         self.app = win32com.client.gencache.EnsureDispatch('{}.Application'.format(application))
-        if visible is not None:
-            self.app.Visible = visible
+        if visible is not None and application != 'PowerPoint':
+            self.app.Visible = constants.msoTrue if visible else constants.msoFalse
         if filepath is not None and os.path.isfile(filepath):
             self.doc = self._get_open_file(filepath)
             if self.doc is None:
-                self.doc = getattr(self.app, document).Open(filepath)
+                if visible is not None and application == 'PowerPoint':
+                    self.doc = getattr(self.app, document).Open(filepath, WithWindow=constants.msoTrue if visible else constants.msoFalse)
+                else:
+                    self.doc = getattr(self.app, document).Open(filepath)
         else:
             self.doc = getattr(self.app, document).Add()
             if filepath is not None:
