@@ -177,6 +177,16 @@ class PowerPoint(Office):
     def close(self, alert=True):
         super(PowerPoint, self).close(alert, switch=(constants.ppAlertsAll, constants.ppAlertsNone))
 
+    def export(self, filepath, index):
+        self.doc.SaveCopyAs(filepath)
+        other = PowerPoint(filepath, visible=False)
+        for i in range(other.doc.Slides.Count, index, -1):
+            other.doc.Slides(i).Delete()
+        for i in range(index - 1, 0, -1):
+            other.doc.Slides(i).Delete()
+        other.doc.Save()
+        other.doc.Close()
+
     def get_slide(self, index=None):
         if index is None:
             index = self.app.ActiveWindow.View.Slide.SlideNumber
@@ -208,11 +218,11 @@ class PowerPoint(Office):
             shape.Left = self.doc.PageSetup.SlideWidth - shape.Width - x
 
     def size(self):
-        f = tempfile.NamedTemporaryFile(suffix='.ppt', delete=False)
+        f = tempfile.NamedTemporaryFile(suffix='.pptx', delete=False)
         f.close()
         for i in range(1, self.doc.Slides.Count + 1):
-            self.doc.Slides(i).Export(f.name[:-4], f.name[-3:])
-            print('{:>3}: {:.1f} MB'.format(i, os.path.getsize(f.name) / 1e6))
+            self.export(f.name, i)
+            print('{:>3}/{}: {:.1f} MB'.format(i, self.doc.Slides.Count, os.path.getsize(f.name) / 1e6))
         os.remove(f.name)
 
 
