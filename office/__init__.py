@@ -171,7 +171,7 @@ class PowerPoint(Office):
             return slide.Shapes.AddPicture(FileName=filepath, LinkToFile=constants.msoFalse, SaveWithDocument=constants.msoTrue, Left=inch(position[0]), Top=inch(position[1]), Width=inch(size[0]), Height=inch(size[1]))
 
     def close(self, alert=True):
-        super(Word, self).close(alert, switch=(constants.ppAlertsAll, constants.ppAlertsNone))
+        super(PowerPoint, self).close(alert, switch=(constants.ppAlertsAll, constants.ppAlertsNone))
 
     def get_slide(self, index=None):
         if index is None:
