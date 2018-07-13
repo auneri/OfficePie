@@ -3,20 +3,29 @@
 from __future__ import absolute_import, division, print_function
 
 import os
+import re
 
 import setuptools
 
 
 def readme():
-    filename = 'README.md'
-    filepath = os.path.join(os.path.abspath(os.path.dirname(__file__)), filename)
+    filepath = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'README.md')
     with open(filepath) as f:
         return f.read()
 
 
+def version():
+    filepath = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'ipyslurm', '__init__.py')
+    with open(filepath) as f:
+        version_match = re.search(r"^__version__ = [']([^']*)[']", f.read(), re.M)
+    if version_match:
+        return version_match.group(1)
+    raise RuntimeError('Failed to find version string')
+
+
 setuptools.setup(
     name='OfficePie',
-    version='1.0.0.dev',
+    version=version(),
     description='',
     long_description=readme(),
     url='https://github.com/auneri/officepie',
