@@ -26,9 +26,10 @@ def version():
 setuptools.setup(
     name='OfficePie',
     version=version(),
-    description='',
+    description='Microsoft Office automation using Python',
     long_description=readme(),
-    url='https://github.com/auneri/officepie',
+    long_description_content_type='text/markdown',
+    url='https://auneri.github.io/OfficePie',
     author='Ali Uneri',
     license='MIT',
     classifiers=[
@@ -40,4 +41,5 @@ setuptools.setup(
     install_requires=[
         'pywin32',
         'qtpy',
-        'six'])
+        'six'],
+    python_requires='>=2.7')
