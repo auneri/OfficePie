@@ -15,7 +15,7 @@ def readme():
 
 
 def version():
-    filepath = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'ipyslurm', '__init__.py')
+    filepath = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'office', '__init__.py')
     with open(filepath) as f:
         version_match = re.search(r"^__version__ = [']([^']*)[']", f.read(), re.M)
     if version_match:
