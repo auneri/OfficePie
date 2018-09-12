@@ -4,7 +4,6 @@ from __future__ import absolute_import, division, print_function
 
 import os
 import sys
-import tempfile
 from contextlib import contextmanager
 
 import pythoncom
@@ -218,14 +217,6 @@ class PowerPoint(Office):
             shape.Left = (self.doc.PageSetup.SlideWidth - shape.Width) / 2 + x
         elif left == 'right':
             shape.Left = self.doc.PageSetup.SlideWidth - shape.Width - x
-
-    def size(self):
-        f = tempfile.NamedTemporaryFile(suffix='.pptx', delete=False)
-        f.close()
-        for i in range(1, self.doc.Slides.Count + 1):
-            self.export(f.name, i)
-            print('{:>3}/{}: {:.1f} MB'.format(i, self.doc.Slides.Count, os.path.getsize(f.name) / 1e6))
-        os.remove(f.name)
 
 
 @contextmanager
