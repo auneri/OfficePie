@@ -12,13 +12,10 @@ import inspect
 import os
 import sys
 
-import qtpy
 from qtpy import QtCore, QtGui, QtWidgets
 
 sys.path.insert(0, os.path.abspath(os.path.join(inspect.getfile(inspect.currentframe()), '..', '..', '..')))
 from office import Word  # noqa: E402, I100, I202
-
-os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = os.path.abspath(os.path.join(inspect.getfile(qtpy), '..', '..', 'PyQt5', 'Qt', 'plugins'))
 
 
 class Window(QtWidgets.QWidget):

@@ -9,7 +9,7 @@ DEBUG = False
 
 application_name = specnm  # noqa: F821
 application_path = os.path.abspath(os.path.join(inspect.getfile(inspect.currentframe()), '..', SPEC, '..'))  # noqa: F821
-package_path = os.path.abspath(os.path.join(application_path, '..', '..'))
+package_path = os.path.abspath(os.path.join(application_path, '..', '..', application_name))
 script_path = os.path.join(application_path, '{}.py'.format(application_name))
 icon_path = os.path.join(application_path, '{}.ico'.format(application_name))
 
