@@ -28,8 +28,8 @@ class Window(QtWidgets.QWidget):
 
         input_select = QtWidgets.QPushButton('...')
         output_select = QtWidgets.QPushButton('...')
-        self.input_path = QtWidgets.QLabel('input.docx')
-        self.output_path = QtWidgets.QLabel(os.path.abspath(os.path.expanduser('~/Desktop/output.docx')))
+        self.input_path = QtWidgets.QLabel('Input Document.docx')
+        self.output_path = QtWidgets.QLabel(os.path.abspath(os.path.expanduser('~/Desktop/Output Document.docx')))
         self.strike_deletions = QtWidgets.QCheckBox('Strike Deletions')
         self.progress = QtWidgets.QProgressBar()
         mark = QtWidgets.QPushButton('Mark')
