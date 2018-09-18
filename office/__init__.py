@@ -187,7 +187,7 @@ class PowerPoint(Office):
         for i in range(index - 1, 0, -1):
             other.doc.Slides(i).Delete()
         other.doc.Save()
-        other.doc.Close()
+        other.close(alert=False)
 
     def get_slide(self, index=None):
         if index is None:
