@@ -98,10 +98,10 @@ def main():
 
     # customize text box defaults
     shape = p.add_text('Defaults', (1, 1))
-    shape.TextFrame.MarginLeft = inch(margin[0])
-    shape.TextFrame.MarginRight = inch(margin[0])
-    shape.TextFrame.MarginTop = inch(margin[1])
-    shape.TextFrame.MarginBottom = inch(margin[1])
+    shape.TextFrame.MarginLeft = 0
+    shape.TextFrame.MarginRight = 0
+    shape.TextFrame.MarginTop = 0
+    shape.TextFrame.MarginBottom = 0
     shape.TextFrame.TextRange.Font.Size = 20
     shape.SetShapesDefaultProperties()
     shape.Delete()
