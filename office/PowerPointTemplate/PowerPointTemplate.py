@@ -11,6 +11,7 @@ import inspect
 import os
 import sys
 
+import winreg
 from win32com.client import constants
 
 sys.path.insert(0, os.path.abspath(os.path.join(inspect.getfile(inspect.currentframe()), '..', '..', '..')))
@@ -20,7 +21,6 @@ from office import inch, PowerPoint, rgb  # noqa: E402, I100, I202
 def main():
     version = 16.0
 
-    import winreg
     key = winreg.CreateKey(winreg.HKEY_CURRENT_USER, 'Software\\Microsoft\\Office\\{:.1f}\\PowerPoint\\Options'.format(version))
     winreg.SetValueEx(key, 'AutomaticPictureCompressionDefault', 0, winreg.REG_DWORD, 0)
     winreg.SetValueEx(key, 'ExportBitmapResolution', 0, winreg.REG_DWORD, int(96 * 1.5))  # 1920x1080
