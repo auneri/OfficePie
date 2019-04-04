@@ -23,7 +23,7 @@ def main():
     import winreg
     key = winreg.CreateKey(winreg.HKEY_CURRENT_USER, 'Software\\Microsoft\\Office\\{:.1f}\\PowerPoint\\Options'.format(version))
     winreg.SetValueEx(key, 'AutomaticPictureCompressionDefault', 0, winreg.REG_DWORD, 0)
-    winreg.SetValueEx(key, 'ExportBitmapResolution', 0, winreg.REG_DWORD, 144)
+    winreg.SetValueEx(key, 'ExportBitmapResolution', 0, winreg.REG_DWORD, 96 * 1.5)  # 1920x1080
     winreg.CloseKey(key)
 
     p = PowerPoint(version=version)
