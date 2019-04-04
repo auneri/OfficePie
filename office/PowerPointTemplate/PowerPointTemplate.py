@@ -43,16 +43,18 @@ def main():
     p.doc.SlideMaster.Theme.ThemeFontScheme.MinorFont(constants.msoThemeLatin).Name = 'Calibri'  # body
 
     # assign theme colors
-    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorDark1).RGB = rgb(255, 255, 255)    # white
-    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorLight1).RGB = rgb(0, 0, 0)         # black
-    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorDark2).RGB = rgb(204, 204, 204)    # dirty white
-    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorLight2).RGB = rgb(51, 51, 51)      # dirty black
-    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent1).RGB = rgb(238, 238, 34)   # yellow
+    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorDark1).RGB = rgb(255, 255, 255)  # white
+    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorLight1).RGB = rgb(0, 0, 0)  # black
+    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorDark2).RGB = rgb(204, 204, 204)  # dirty white
+    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorLight2).RGB = rgb(51, 51, 51)  # dirty black
+    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent1).RGB = rgb(238, 238, 34)  # yellow
     p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent2).RGB = rgb(238, 136, 238)  # magenta
-    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent3).RGB = rgb(34, 238, 34)    # green
-    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent4).RGB = rgb(34, 238, 238)   # cyan
-    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent5).RGB = rgb(238, 136, 34)   # orange
-    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent6).RGB = rgb(136, 34, 238)   # purple
+    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent3).RGB = rgb(34, 238, 34)  # green
+    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent4).RGB = rgb(34, 238, 238)  # cyan
+    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent5).RGB = rgb(238, 136, 34)  # orange
+    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent6).RGB = rgb(136, 34, 238)  # purple
+    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorHyperlink).RGB = rgb(238, 136, 238)  # magenta
+    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorFollowedHyperlink).RGB = rgb(238, 136, 238)  # magenta
     p.doc.SlideMaster.Background.Fill.ForeColor.ObjectThemeColor = constants.msoThemeColorLight1
 
     # format slide master title
