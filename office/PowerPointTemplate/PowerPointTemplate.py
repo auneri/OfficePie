@@ -7,6 +7,7 @@ For help in extending this template, see https://msdn.microsoft.com/en-us/VBA/VB
 
 from __future__ import absolute_import, division, print_function
 
+import argparse
 import inspect
 import os
 import sys
@@ -18,8 +19,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(inspect.getfile(inspect.currentf
 from office import inch, PowerPoint, rgb  # noqa: E402, I100, I202
 
 
-def main():
-    version = 16.0
+def main(version):
 
     key = winreg.CreateKey(winreg.HKEY_CURRENT_USER, 'Software\\Microsoft\\Office\\{:.1f}\\PowerPoint\\Options'.format(version))
     winreg.SetValueEx(key, 'AutomaticPictureCompressionDefault', 0, winreg.REG_DWORD, 0)
@@ -152,4 +152,7 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(description='Converts Word tracked changes to formatted text')
+    parser.add_argument('--version', default=16.0)
+    args = parser.parse_args()
+    main(args.version)
