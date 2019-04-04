@@ -19,7 +19,9 @@ sys.path.insert(0, os.path.abspath(os.path.join(inspect.getfile(inspect.currentf
 from office import inch, PowerPoint, rgb  # noqa: E402, I100, I202
 
 
-def main(version):
+def main(version, theme):
+    if theme not in ['dark', 'light']:
+        raise NotImplementedError('{} theme was not recognized'.format(theme))
 
     key = winreg.CreateKey(winreg.HKEY_CURRENT_USER, 'Software\\Microsoft\\Office\\{:.1f}\\PowerPoint\\Options'.format(version))
     winreg.SetValueEx(key, 'AutomaticPictureCompressionDefault', 0, winreg.REG_DWORD, 0)
@@ -40,21 +42,30 @@ def main(version):
 
     # assign theme fonts
     p.doc.SlideMaster.Theme.ThemeFontScheme.MajorFont(constants.msoThemeLatin).Name = 'Cambria'  # headings
-    p.doc.SlideMaster.Theme.ThemeFontScheme.MinorFont(constants.msoThemeLatin).Name = 'Calibri'  # body
+    if theme == 'dark':
+        p.doc.SlideMaster.Theme.ThemeFontScheme.MinorFont(constants.msoThemeLatin).Name = 'Calibri'  # body
+    elif theme == 'light':
+        p.doc.SlideMaster.Theme.ThemeFontScheme.MinorFont(constants.msoThemeLatin).Name = 'Cambria'  # body
 
     # assign theme colors
-    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorDark1).RGB = rgb(255, 255, 255)  # white
-    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorLight1).RGB = rgb(0, 0, 0)  # black
-    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorDark2).RGB = rgb(204, 204, 204)  # dirty white
-    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorLight2).RGB = rgb(51, 51, 51)  # dirty black
-    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent1).RGB = rgb(238, 238, 34)  # yellow
-    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent2).RGB = rgb(238, 136, 238)  # magenta
-    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent3).RGB = rgb(34, 238, 34)  # green
-    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent4).RGB = rgb(34, 238, 238)  # cyan
-    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent5).RGB = rgb(238, 136, 34)  # orange
-    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent6).RGB = rgb(136, 34, 238)  # purple
-    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorHyperlink).RGB = rgb(238, 136, 238)  # magenta
-    p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorFollowedHyperlink).RGB = rgb(238, 136, 238)  # magenta
+    if theme == 'dark':
+        p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorDark1).RGB = rgb(255, 255, 255)  # white
+        p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorLight1).RGB = rgb(0, 0, 0)  # black
+        p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorDark2).RGB = rgb(204, 204, 204)  # dirty white
+        p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorLight2).RGB = rgb(51, 51, 51)  # dirty black
+        p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent1).RGB = rgb(238, 238, 34)  # yellow
+        p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent2).RGB = rgb(238, 136, 238)  # magenta
+        p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent3).RGB = rgb(34, 238, 34)  # green
+        p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent4).RGB = rgb(34, 238, 238)  # cyan
+        p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent5).RGB = rgb(238, 136, 34)  # orange
+        p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent6).RGB = rgb(136, 34, 238)  # purple
+        p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorHyperlink).RGB = rgb(238, 136, 238)  # magenta
+        p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorFollowedHyperlink).RGB = rgb(238, 136, 238)  # magenta
+    elif theme == 'light':
+        p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorDark1).RGB = rgb(0, 0, 0)  # black
+        p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorLight1).RGB = rgb(255, 255, 255)  # white
+        p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorDark2).RGB = rgb(51, 51, 51)  # dirty black
+        p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorLight2).RGB = rgb(204, 204, 204)  # dirty white
     p.doc.SlideMaster.Background.Fill.ForeColor.ObjectThemeColor = constants.msoThemeColorLight1
 
     # format slide master title
@@ -154,5 +165,6 @@ def main(version):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Converts Word tracked changes to formatted text')
     parser.add_argument('--version', default=16.0)
+    parser.add_argument('--theme', default='dark')
     args = parser.parse_args()
-    main(args.version)
+    main(args.version, args.theme)
