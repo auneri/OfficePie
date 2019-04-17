@@ -189,6 +189,8 @@ class PowerPoint(Office):
         other.close(alert=False)
 
     def get_slide(self, index=None):
+        if index == 'master':
+            return self.doc.SlideMaster
         if index is None:
             index = self.app.ActiveWindow.View.Slide.SlideNumber
         elif index >= 0:
