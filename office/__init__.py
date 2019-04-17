@@ -221,6 +221,24 @@ class PowerPoint(Office):
         elif left == 'right':
             shape.Left = self.doc.PageSetup.SlideWidth - shape.Width - x
 
+    def ungroup(self, shape, flatten=False):
+        def ungroups(shape, shapes=[]):
+            try:
+                srange = shape.Ungroup()
+                for i in range(srange.Count):
+                    ungroups(srange.Item(i + 1), shapes)
+            except pythoncom.com_error:
+                shapes.append(shape)
+                return
+        slide = shape.Parent
+        if flatten:
+            shapes = []
+            ungroups(shape, shapes)
+        else:
+            srange = shape.Ungroup()
+            shapes = [srange.Item(x + 1) for x in range(srange.Count)]
+        return slide.Shapes.Range([x.Name for x in shapes]).Group() if len(shapes) > 1 else shapes[0]
+
 
 @contextmanager
 def capture(stdout_curr=None, stderr_curr=None):
