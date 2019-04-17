@@ -170,10 +170,11 @@ class PowerPoint(Office):
 
     def add_image(self, filepath, position=(0, 0), size=None, slide=None):
         slide = self.get_slide(slide)
-        if size is None:
-            return slide.Shapes.AddPicture(FileName=filepath, LinkToFile=constants.msoFalse, SaveWithDocument=constants.msoTrue, Left=inch(position[0]), Top=inch(position[1]))
-        else:
-            return slide.Shapes.AddPicture(FileName=filepath, LinkToFile=constants.msoFalse, SaveWithDocument=constants.msoTrue, Left=inch(position[0]), Top=inch(position[1]), Width=inch(size[0]), Height=inch(size[1]))
+        kwargs = {}
+        if size is not None:
+            kwargs['Width'] = inch(size[0])
+            kwargs['Height'] = inch(size[1])
+        return slide.Shapes.AddPicture(FileName=filepath, LinkToFile=constants.msoFalse, SaveWithDocument=constants.msoTrue, Left=inch(position[0]), Top=inch(position[1]), **kwargs)
 
     def close(self, alert=True):
         super(PowerPoint, self).close(alert, switch=(constants.ppAlertsAll, constants.ppAlertsNone))
