@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-
-"""Reports PowerPoint slide sizes.
+"""Report PowerPoint slide sizes.
 
 For help in extending this template, see https://msdn.microsoft.com/en-us/VBA/VBA-PowerPoint
 """

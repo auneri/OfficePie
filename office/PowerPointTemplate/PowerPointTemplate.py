@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-
-"""Generates PowerPoint templates.
+"""Generate PowerPoint templates.
 
 For help in extending this template, see https://msdn.microsoft.com/en-us/VBA/VBA-PowerPoint
 """
@@ -20,7 +19,7 @@ from office import inch, PowerPoint, rgb  # noqa: E402, I100, I202
 
 
 def main(version, theme):
-    if theme not in ['dark', 'light']:
+    if theme not in ('dark', 'light'):
         raise NotImplementedError('{} theme was not recognized'.format(theme))
 
     key = winreg.CreateKey(winreg.HKEY_CURRENT_USER, 'Software\\Microsoft\\Office\\{:.1f}\\PowerPoint\\Options'.format(version))
@@ -103,7 +102,7 @@ def main(version, theme):
 
     # remove unused layouts
     for layout in tuple(p.doc.SlideMaster.CustomLayouts):
-        if layout.Name not in ['Title Slide', 'Title and Content', 'Section Header', 'Title Only', 'Blank']:
+        if layout.Name not in ('Title Slide', 'Title and Content', 'Section Header', 'Title Only', 'Blank'):
             layout.Delete()
 
     # add a slide with "Title and Content"

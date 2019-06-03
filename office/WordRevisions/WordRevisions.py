@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-
-"""Converts Word tracked changes to formatted text.
+"""Convert Word tracked changes to formatted text.
 
 For help in extending this template, see https://msdn.microsoft.com/en-us/VBA/VBA-Word
 """

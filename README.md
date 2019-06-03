@@ -11,7 +11,7 @@ Microsoft Office [automation](https://msdn.microsoft.com/en-us/VBA/office-shared
 pip install git+https://github.com/auneri/OfficePie.git
 ```
 
-## Creating Portable Applications
+## Creating portable applications
 
 ```batch
 set app=WordRevisions
