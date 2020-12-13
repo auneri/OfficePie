@@ -1,13 +1,10 @@
-from __future__ import absolute_import, division, print_function
-
 import os
 import sys
 from contextlib import contextmanager
+from io import StringIO
 
 import pythoncom
 import win32com.client
-from six import string_types
-from six.moves import StringIO
 from win32com.client import constants, makepy
 
 __version__ = '1.0.0.dev'
@@ -153,7 +150,7 @@ class PowerPoint(Office):
     def add_slide(self, layout=None):
         if layout is None:
             layout = constants.ppLayoutBlank
-        elif isinstance(layout, string_types):
+        elif isinstance(layout, str):
             layout = eval('constants.ppLayout{}'.format(layout))
         slide = self.doc.Slides.Add(self.doc.Slides.Count + 1, layout)
         slide.Select()

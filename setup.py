@@ -33,11 +33,9 @@ setuptools.setup(
     classifiers=[
         'License :: OSI Approved :: MIT License',
         'Operating System :: Microsoft :: Windows',
-        'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 3'],
     packages=setuptools.find_packages(),
     install_requires=[
         'pywin32',
-        'qtpy',
-        'six'],
-    python_requires='>=2.7')
+        'qtpy'],
+    python_requires='>=3.6')

@@ -4,8 +4,6 @@
 For help in extending this template, see https://msdn.microsoft.com/en-us/VBA/VBA-PowerPoint
 """
 
-from __future__ import absolute_import, division, print_function
-
 import argparse
 import inspect
 import os

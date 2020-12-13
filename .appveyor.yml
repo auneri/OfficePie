@@ -6,10 +6,12 @@ branches:
 
 environment:
   matrix:
-    # Python v2.7
-    - MINICONDA: C:\Miniconda-x64
     # Python v3.6
     - MINICONDA: C:\Miniconda36-x64
+    # Python v3.7
+    - MINICONDA: C:\Miniconda37-x64
+    # Python v3.8
+    - MINICONDA: C:\Miniconda38-x64
 
 init:
   - "set PATH=%MINICONDA%;%MINICONDA%\\Scripts;%MINICONDA%\\Library\\bin;%PATH%"
