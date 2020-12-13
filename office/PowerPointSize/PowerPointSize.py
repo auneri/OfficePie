@@ -82,11 +82,11 @@ class Window(QtWidgets.QWidget):
             QtCore.QCoreApplication.processEvents(QtCore.QEventLoop.AllEvents, 100)
             p.export(f.name, i + 1)
             sizes.append(os.path.getsize(f.name) / 1e6)
-            self.table.setItem(i, 0, QtWidgets.QTableWidgetItem('{:.2f}'.format(sizes[i])))
+            self.table.setItem(i, 0, QtWidgets.QTableWidgetItem(f'{sizes[i]:.2f}'))
         os.remove(f.name)
         self.progress.setValue(0)
         for i, size in enumerate(sizes):
-            self.table.setItem(i, 1, QtWidgets.QTableWidgetItem('{:.0f}'.format(100 * sizes[i] / sum(sizes))))
+            self.table.setItem(i, 1, QtWidgets.QTableWidgetItem(f'{100 * sizes[i] / sum(sizes):.0f}'))
         p.close(alert=False)
 
 
@@ -101,7 +101,7 @@ if __name__ == '__main__':
         f.close()
         for i in range(1, p.doc.Slides.Count + 1):
             p.export(f.name, i)
-            print('{:>3}/{}: {:.1f} MB'.format(i, p.doc.Slides.Count, os.path.getsize(f.name) / 1e6))
+            print(f'{i:>3}/{p.doc.Slides.Count}: {os.path.getsize(f.name) / 1e6:.1f} MB')
         os.remove(f.name)
         del p
     else:

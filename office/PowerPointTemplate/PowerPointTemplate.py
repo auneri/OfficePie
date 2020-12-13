@@ -14,9 +14,9 @@ from win32com.client import constants
 
 def main(version, theme):
     if theme not in ('dark', 'light'):
-        raise NotImplementedError('{} theme was not recognized'.format(theme))
+        raise NotImplementedError(f'{theme} theme was not recognized')
 
-    key = winreg.CreateKey(winreg.HKEY_CURRENT_USER, 'Software\\Microsoft\\Office\\{:.1f}\\PowerPoint\\Options'.format(version))
+    key = winreg.CreateKey(winreg.HKEY_CURRENT_USER, f'Software\\Microsoft\\Office\\{version:.1f}\\PowerPoint\\Options')
     winreg.SetValueEx(key, 'AutomaticPictureCompressionDefault', 0, winreg.REG_DWORD, 0)
     winreg.SetValueEx(key, 'ExportBitmapResolution', 0, winreg.REG_DWORD, int(96 * 1.5))  # 1920x1080
     winreg.CloseKey(key)
@@ -148,7 +148,7 @@ def main(version, theme):
         slide.Shapes.AddShape(constants.msoShapeRectangle, inch((slide_width + pad) / 2), inch((slide_height + pad) / 2), inch((slide_width - pad) / 2 - pad), inch((slide_height - pad) / 2 - pad))]
     for i, shape in enumerate(shapes, start=2):
         shape.Line.Visible = constants.msoFalse
-        shape.Fill.ForeColor.ObjectThemeColor = getattr(constants, 'msoThemeColorAccent{}'.format(i))
+        shape.Fill.ForeColor.ObjectThemeColor = getattr(constants, f'msoThemeColorAccent{i}')
         shape.Fill.Transparency = 0.75
         shape.ZOrder(constants.msoSendToBack)
 

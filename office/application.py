@@ -15,9 +15,9 @@ class Application(object):
     """
 
     def __init__(self, application, document, filepath=None, visible=None, version=16.0):
-        self._proxy('Microsoft Office {:.1f} Object Library'.format(version))
-        self._proxy('Microsoft {} {:.1f} Object Library'.format(application, version))
-        self.app = win32com.client.gencache.EnsureDispatch('{}.Application'.format(application))
+        self._proxy(f'Microsoft Office {version:.1f} Object Library')
+        self._proxy(f'Microsoft {application} {version:.1f} Object Library')
+        self.app = win32com.client.gencache.EnsureDispatch(f'{application}.Application')
         if visible is not None and application != 'PowerPoint':
             self.app.Visible = constants.msoTrue if visible else constants.msoFalse
         if filepath is not None and os.path.isfile(filepath):
@@ -60,7 +60,7 @@ class Word(Application):
     >>> w = Word()
     >>> for i in range(3):
     >>>     paragraph = w.doc.Paragraphs.Add(w.doc.Paragraphs(w.doc.Paragraphs.Count).Range)
-    >>>     paragraph.Range.Text = 'Paragraph {}{}'.format(w.doc.Paragraphs.Count - 1, os.linesep)
+    >>>     paragraph.Range.Text = f'Paragraph {w.doc.Paragraphs.Count - 1}{os.linesep}'
     >>> w.doc.SaveAs('/path/to/file.docx')
     """
 
@@ -107,9 +107,9 @@ class Word(Application):
                 elif r.Type == constants.wdNoRevision:
                     print('Unhandled revision: No Revision', file=sys.stderr)
                 elif r.Type in unhandled_revisions:
-                    print('Unhandled revision: {}'.format(unhandled_revisions[r.Type]), file=sys.stderr)
+                    print(f'Unhandled revision: {unhandled_revisions[r.Type]}', file=sys.stderr)
                 else:
-                    print('Unexpected revision type: {}'.format(r.Type), file=sys.stderr)
+                    print(f'Unexpected revision type: {r.Type}', file=sys.stderr)
             yield i + 1
         self.doc.TrackRevisions = track_revisions
 
@@ -134,7 +134,7 @@ class PowerPoint(Application):
 
     >>> p = PowerPoint()
     >>> slide = p.add_slide()
-    >>> p.add_text('Slide {}'.format(slide.SlideNumber), (0.2,0.2), slide=slide.SlideNumber)
+    >>> p.add_text(f'Slide {slide.SlideNumber}', (0.2,0.2), slide=slide.SlideNumber)
     >>> p.doc.SaveAs('/path/to/file.pptx')
     """
 
@@ -149,7 +149,7 @@ class PowerPoint(Application):
         if layout is None:
             layout = constants.ppLayoutBlank
         elif isinstance(layout, str):
-            layout = eval('constants.ppLayout{}'.format(layout))
+            layout = eval(f'constants.ppLayout{layout}')
         slide = self.doc.Slides.Add(self.doc.Slides.Count + 1, layout)
         slide.Select()
         return slide
