@@ -1,11 +1,12 @@
 name: office
 
-on: [push]
+on: push
 
 jobs:
   build:
 
     runs-on: windows-latest
+
     strategy:
       matrix:
         python-version: [3.6, 3.7, 3.8]
@@ -17,5 +18,6 @@ jobs:
           auto-update-conda: true
           python-version: ${{ matrix.python-version }}
       - run: dir
+        shell: cmd
       - run: conda env update
       - run: pytest
