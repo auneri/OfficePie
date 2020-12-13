@@ -19,5 +19,6 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - run: dir
         shell: cmd
+        working-directory: ..
       - run: conda env update
       - run: pytest
