@@ -3,7 +3,7 @@
 Microsoft Office [automation](https://msdn.microsoft.com/en-us/VBA/office-shared-vba/articles/getting-started-with-vba-in-office) using Python.
 
 [![license](https://img.shields.io/github/license/auneri/OfficePie.svg)](https://github.com/auneri/OfficePie/blob/master/LICENSE.md)
-[![build](https://github.com/auneri/OfficePie/workflows/office/badge.svg)](https://github.com/auneri/OfficePie/actions)
+[![build](https://img.shields.io/github/workflow/status/auneri/OfficePie/office)](https://github.com/auneri/OfficePie/actions)
 
 ## Getting started
 
