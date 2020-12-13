@@ -7,8 +7,6 @@ import pythoncom
 import win32com.client
 from win32com.client import constants, makepy
 
-__version__ = '1.0.0.dev'
-
 
 class Office(object):
     """A minimial wrapper for managing Microsoft Office documents through Component Object Model (COM).

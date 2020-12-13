@@ -1,31 +1,20 @@
-from __future__ import absolute_import, division, print_function
-
-import os
-import re
+import inspect
+import pathlib
 
 import setuptools
 
 
-def readme():
-    filepath = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'README.md')
-    with open(filepath) as f:
+def read(filename):
+    filepath = pathlib.Path(inspect.getfile(inspect.currentframe())).resolve().parent / filename
+    with filepath.open() as f:
         return f.read()
 
 
-def version():
-    filepath = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'office', '__init__.py')
-    with open(filepath) as f:
-        version_match = re.search(r"^__version__ = [']([^']*)[']", f.read(), re.M)
-    if version_match:
-        return version_match.group(1)
-    raise RuntimeError('Failed to find version string')
-
-
 setuptools.setup(
-    name='OfficePie',
-    version=version(),
-    description='Microsoft Office automation using Python',
-    long_description=readme(),
+    name='office',
+    version='1.0.0.dev',
+    description=read('README.md').splitlines()[2],
+    long_description=read('README.md'),
     long_description_content_type='text/markdown',
     url='https://auneri.github.io/OfficePie',
     author='Ali Uneri',
@@ -35,7 +24,5 @@ setuptools.setup(
         'Operating System :: Microsoft :: Windows',
         'Programming Language :: Python :: 3'],
     packages=setuptools.find_packages(),
-    install_requires=[
-        'pywin32',
-        'qtpy'],
+    install_requires=read('requirements.txt').splitlines(),
     python_requires='>=3.6')
