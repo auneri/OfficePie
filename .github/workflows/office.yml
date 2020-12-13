@@ -1,0 +1,17 @@
+name: office
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        python-version: [3.6, 3.7, 3.8]
+
+    steps:
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-update-conda: true
+          python-version: ${{ matrix.python-version }}
+      - run: conda env update
+      - run: pytest
