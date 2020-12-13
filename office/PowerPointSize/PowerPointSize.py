@@ -5,15 +5,12 @@ For help in extending this template, see https://msdn.microsoft.com/en-us/VBA/VB
 """
 
 import argparse
-import inspect
 import os
 import sys
 import tempfile
 
+import office
 from qtpy import QtCore, QtGui, QtWidgets
-
-sys.path.insert(0, os.path.abspath(os.path.join(inspect.getfile(inspect.currentframe()), '..', '..', '..')))
-from office import PowerPoint  # noqa: E402, I100, I202
 
 
 class Window(QtWidgets.QWidget):
@@ -74,7 +71,7 @@ class Window(QtWidgets.QWidget):
             self.input_path.setText(os.path.abspath(path))
 
     def on_size(self):
-        p = PowerPoint(self.input_path.text())
+        p = office.PowerPoint(self.input_path.text())
         self.progress.setMaximum(p.doc.Slides.Count)
         self.table.setRowCount(p.doc.Slides.Count)
         f = tempfile.NamedTemporaryFile(suffix='.pptx', delete=False)
@@ -99,7 +96,7 @@ if __name__ == '__main__':
         parser.add_argument('input', help='Input presentation')
         args = parser.parse_args()
 
-        p = PowerPoint(args.input)
+        p = office.PowerPoint(args.input)
         f = tempfile.NamedTemporaryFile(suffix='.pptx', delete=False)
         f.close()
         for i in range(1, p.doc.Slides.Count + 1):

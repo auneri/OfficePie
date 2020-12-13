@@ -5,15 +5,11 @@ For help in extending this template, see https://msdn.microsoft.com/en-us/VBA/VB
 """
 
 import argparse
-import inspect
-import os
-import sys
 
+import office
 import winreg
+from office.util import inch, rgb
 from win32com.client import constants
-
-sys.path.insert(0, os.path.abspath(os.path.join(inspect.getfile(inspect.currentframe()), '..', '..', '..')))
-from office import inch, PowerPoint, rgb  # noqa: E402, I100, I202
 
 
 def main(version, theme):
@@ -25,7 +21,7 @@ def main(version, theme):
     winreg.SetValueEx(key, 'ExportBitmapResolution', 0, winreg.REG_DWORD, int(96 * 1.5))  # 1920x1080
     winreg.CloseKey(key)
 
-    p = PowerPoint(version=version)
+    p = office.PowerPoint(version=version)
 
     slide_height = inch(p.doc.PageSetup.SlideHeight, reverse=True)
     slide_width = inch(p.doc.PageSetup.SlideWidth, reverse=True)

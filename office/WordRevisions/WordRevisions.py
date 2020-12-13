@@ -5,14 +5,11 @@ For help in extending this template, see https://msdn.microsoft.com/en-us/VBA/VB
 """
 
 import argparse
-import inspect
 import os
 import sys
 
+import office
 from qtpy import QtCore, QtGui, QtWidgets
-
-sys.path.insert(0, os.path.abspath(os.path.join(inspect.getfile(inspect.currentframe()), '..', '..', '..')))
-from office import Word  # noqa: E402, I100, I202
 
 
 class Window(QtWidgets.QWidget):
@@ -78,7 +75,7 @@ class Window(QtWidgets.QWidget):
             self.output_path.setText(os.path.abspath(path))
 
     def on_mark(self):
-        w = Word(self.input_path.text())
+        w = office.Word(self.input_path.text())
         self.progress.setMaximum(w.doc.Revisions.Count)
         for n in w.mark_revisions(strike_deletions=self.strike_deletions.isChecked()):
             self.progress.setValue(n)
@@ -96,7 +93,7 @@ if __name__ == '__main__':
         parser.add_argument('--strike-deletions', action='store_true', help='Strike deletions instead of removing them')
         args = parser.parse_args()
 
-        w = Word(args.input)
+        w = office.Word(args.input)
         N = w.doc.Revisions.Count
         for n in w.mark_revisions(args.strike_deletions):
             sys.stdout.write('\rMarking... {:.0f}%'.format(100 * n / N))
