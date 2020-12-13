@@ -12,6 +12,7 @@ jobs:
         python-version: [3.6, 3.7, 3.8]
 
     steps:
+      - uses: actions/checkout@v2
       - uses: conda-incubator/setup-miniconda@v2
         with:
           activate-environment: office
@@ -19,6 +20,6 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - run: dir
         shell: cmd
-        working-directory: ..
+        working-directory: .
       - run: conda env update
       - run: pytest
