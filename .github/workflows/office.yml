@@ -13,6 +13,7 @@ jobs:
     steps:
       - uses: conda-incubator/setup-miniconda@v2
         with:
+          activate-environment: office
           auto-update-conda: true
           python-version: ${{ matrix.python-version }}
       - run: conda env update
