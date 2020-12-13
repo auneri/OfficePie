@@ -16,5 +16,6 @@ jobs:
           activate-environment: office
           auto-update-conda: true
           python-version: ${{ matrix.python-version }}
+      - run: dir
       - run: conda env update
       - run: pytest
