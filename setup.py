@@ -24,5 +24,8 @@ setuptools.setup(
         'Operating System :: Microsoft :: Windows',
         'Programming Language :: Python :: 3'],
     packages=setuptools.find_packages(),
-    install_requires=read('requirements.txt').splitlines(),
+    install_requires=[
+        'pyinstaller',
+        'pywin32',
+        'qtpy'],
     python_requires='>=3.6')
