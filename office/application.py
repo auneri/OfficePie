@@ -15,9 +15,13 @@ class Application(object):
     """
 
     def __init__(self, application, document, filepath=None, visible=None, version=16.0):
+        self.app = None
         self._proxy(f'Microsoft Office {version:.1f} Object Library')
         self._proxy(f'Microsoft {application} {version:.1f} Object Library')
-        self.app = win32com.client.gencache.EnsureDispatch(f'{application}.Application')
+        try:
+            self.app = win32com.client.gencache.EnsureDispatch(f'{application}.Application')
+        except pythoncom.com_error as error:
+            raise RuntimeError(f'Failed to start {application}') from error
         if visible is not None and application != 'PowerPoint':
             self.app.Visible = constants.msoTrue if visible else constants.msoFalse
         if filepath is not None and os.path.isfile(filepath):
@@ -33,6 +37,8 @@ class Application(object):
                 self.doc.SaveAs(filepath)
 
     def close(self, alert=True, switch=None):
+        if self.app is None:
+            return
         if switch is None:
             switch = constants.msoTrue, constants.msoFalse
         display_alerts = self.app.DisplayAlerts
