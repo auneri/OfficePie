@@ -113,6 +113,9 @@ class Word(Application):
             yield i + 1
         self.doc.TrackRevisions = track_revisions
 
+    def maximize(self):
+        self.app.WindowState = constants.wdWindowStateMaximize
+
 
 class Excel(Application):
     """Microsoft Office Excel.
@@ -127,6 +130,9 @@ class Excel(Application):
     def __del__(self):
         if len(self.app.Workbooks) == 0:
             self.app.Quit()
+
+    def maximize(self):
+        self.app.WindowState = constants.xlMaximized
 
 
 class PowerPoint(Application):
@@ -194,6 +200,9 @@ class PowerPoint(Application):
         slide = self.doc.Slides(index)
         slide.Select()
         return slide
+
+    def maximize(self):
+        self.app.WindowState = constants.ppWindowMaximized
 
     def move_shape(self, shape, x, y, reference='center', inches=True):
         references = reference.split()
