@@ -4,8 +4,8 @@ channels:
 dependencies:
   - python>=3.6
   - pyinstaller
+  - pyside2
   - pywin32
-  - qtpy
   # test requirements
   - flake8>=3.8
   - flake8-builtins
