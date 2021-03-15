@@ -26,6 +26,6 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     install_requires=[
         'pyinstaller',
-        'pywin32',
-        'qtpy'],
+        'pyside2',
+        'pywin32'],
     python_requires='>=3.6')
