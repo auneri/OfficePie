@@ -37,8 +37,6 @@ class Application(object):
                 self.doc.SaveAs(filepath)
 
     def close(self, alert=True, switch=None):
-        if self.app is None:
-            return
         if switch is None:
             switch = constants.msoTrue, constants.msoFalse
         display_alerts = self.app.DisplayAlerts
@@ -74,7 +72,7 @@ class Word(Application):
         super(Word, self).__init__('Word', 'Documents', *args, **kwargs)
 
     def __del__(self):
-        if len(self.app.Documents) == 0:
+        if self.app is not None and len(self.app.Documents) == 0:
             self.app.Quit()
 
     def add_image(self, filepath):
@@ -134,7 +132,7 @@ class Excel(Application):
         super(Excel, self).__init__('Excel', 'Workbooks', *args, **kwargs)
 
     def __del__(self):
-        if len(self.app.Workbooks) == 0:
+        if self.app is not None and len(self.app.Workbooks) == 0:
             self.app.Quit()
 
     def maximize(self):
@@ -154,7 +152,7 @@ class PowerPoint(Application):
         super(PowerPoint, self).__init__('PowerPoint', 'Presentations', *args, **kwargs)
 
     def __del__(self):
-        if len(self.app.Presentations) == 0:
+        if self.app is not None and len(self.app.Presentations) == 0:
             self.app.Quit()
 
     def add_slide(self, layout=None):
