@@ -9,7 +9,7 @@ import os
 import sys
 
 import office
-from PySide2 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class Window(QtWidgets.QWidget):
