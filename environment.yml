@@ -4,7 +4,7 @@ channels:
 dependencies:
   - python>=3.6
   - pyinstaller
-  - pyqt5
+  - pyqt
   - pywin32
   # test requirements
   - flake8>=3.8
