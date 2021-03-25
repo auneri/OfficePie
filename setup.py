@@ -25,7 +25,6 @@ setuptools.setup(
         'Programming Language :: Python :: 3'],
     packages=setuptools.find_packages(),
     install_requires=[
-        'pyinstaller',
         'pyqt5',
         'pywin32'],
     python_requires='>=3.6')

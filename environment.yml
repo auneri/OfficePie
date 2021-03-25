@@ -6,8 +6,8 @@ dependencies:
   - pyinstaller
   - pyqt
   - pywin32
-  # test requirements
-  - flake8>=3.8
+  # test
+  - flake8>=3.9
   - flake8-builtins
   - flake8-comprehensions
   - flake8-import-order
@@ -16,7 +16,7 @@ dependencies:
   - pep8-naming
   - pytest>=6.2
   - pytest-flake8
-  # pip requirements
-  - pip>=21.0
+  # pip
+  - pip>=21.1
   - pip:
     - --editable .
