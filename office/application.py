@@ -1,3 +1,5 @@
+import contextlib
+import io
 import os
 import sys
 
@@ -5,7 +7,7 @@ import pythoncom
 import win32com.client
 from win32com.client import constants, makepy
 
-from .util import capture, inch
+from .util import inch
 
 
 class Application(object):
@@ -52,10 +54,11 @@ class Application(object):
 
     def _proxy(self, name=''):
         """Ensure generation of named static COM proxy upon dispatch."""
-        with capture() as (stdout, _):
+        f = io.StringIO()
+        with contextlib.redirect_stdout(f):
             sys.argv = ['', '-i', name]
             makepy.main()
-        exec('\n'.join(line.replace(' >>> ', '') for line in stdout.getvalue().splitlines() if line.startswith(' >>> ')))
+        exec('\n'.join(line.replace(' >>> ', '') for line in f.getvalue().splitlines() if line.startswith(' >>> ')))
 
 
 class Word(Application):
