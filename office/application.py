@@ -138,6 +138,9 @@ class Excel(Application):
         if self.app is not None and len(self.app.Workbooks) == 0:
             self.app.Quit()
 
+    def export(self, filepath):
+        self.doc.ActiveSheet.ExportAsFixedFormat(0, filepath)
+
     def maximize(self):
         self.app.WindowState = constants.xlMaximized
 
