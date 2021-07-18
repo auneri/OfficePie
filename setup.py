@@ -12,7 +12,7 @@ def read(filename):
 
 setuptools.setup(
     name='office',
-    version='1.0.0.dev',
+    version='1.0.0.dev0',
     description=read('README.md').splitlines()[2],
     long_description=read('README.md'),
     long_description_content_type='text/markdown',
