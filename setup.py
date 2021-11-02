@@ -19,6 +19,7 @@ setuptools.setup(
     url='https://auneri.github.io/OfficePie',
     author='Ali Uneri',
     license='MIT',
+    license_files=('LICENSE.md',),
     classifiers=[
         'License :: OSI Approved :: MIT License',
         'Operating System :: Microsoft :: Windows',
