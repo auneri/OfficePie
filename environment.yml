@@ -7,7 +7,7 @@ dependencies:
   - pyqt
   - pywin32
   # test
-  - flake8>=3.9
+  - flake8
   - flake8-builtins
   - flake8-comprehensions
   - flake8-import-order
@@ -17,6 +17,6 @@ dependencies:
   - pytest>=6.2
   - pytest-flake8
   # pip
-  - pip>=21.1
+  - pip
   - pip:
     - --editable .
