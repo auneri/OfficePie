@@ -28,4 +28,4 @@ setuptools.setup(
     install_requires=[
         'pyqt5',
         'pywin32'],
-    python_requires='>=3.6')
+    python_requires='>=3.7')
