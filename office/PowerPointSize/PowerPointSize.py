@@ -5,7 +5,7 @@ For help in extending this template, see https://msdn.microsoft.com/en-us/VBA/VB
 """
 
 import argparse
-import os
+import pathlib
 import sys
 import tempfile
 
@@ -61,32 +61,32 @@ class Window(QtWidgets.QWidget):
 
     def dropEvent(self, event):  # noqa: N802
         self.setBackgroundRole(QtGui.QPalette.Window)
-        path = event.mimeData().urls()[0].toLocalFile()
-        self.input_path.setText(os.path.abspath(path))
+        filepath = event.mimeData().urls()[0].toLocalFile()
+        self.input_path.setText(str(pathlib.Path(filepath).resolve()))
         event.accept()
 
     def on_input_select(self):
-        path, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Select input presentation', self.input_path.text(), 'PowerPoint Presentations (*.pptx)')
-        if path:
-            self.input_path.setText(os.path.abspath(path))
+        filepath, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Select input presentation', self.input_path.text(), 'PowerPoint Presentations (*.pptx)')
+        if filepath:
+            self.input_path.setText(str(pathlib.Path(filepath).resolve()))
 
     def on_size(self):
         p = office.PowerPoint(self.input_path.text())
         self.progress.setMaximum(p.doc.Slides.Count)
         self.table.setRowCount(p.doc.Slides.Count)
-        f = tempfile.NamedTemporaryFile(suffix='.pptx', delete=False)
-        f.close()
+        with tempfile.NamedTemporaryFile(suffix='.pptx', delete=False) as f:
+            filepath = pathlib.Path(f.name)
         sizes = []
         for i in range(p.doc.Slides.Count):
             self.progress.setValue(i)
             QtCore.QCoreApplication.processEvents(QtCore.QEventLoop.AllEvents, 100)
-            p.export(f.name, i + 1)
-            sizes.append(os.path.getsize(f.name) / 1e6)
+            p.export(filepath, i + 1)
+            sizes.append(filepath.stat().st_size / 1e6)
             self.table.setItem(i, 0, QtWidgets.QTableWidgetItem(f'{sizes[i]:.2f}'))
-        os.remove(f.name)
+        filepath.unlink()
         self.progress.setValue(0)
         for i, size in enumerate(sizes):
-            self.table.setItem(i, 1, QtWidgets.QTableWidgetItem(f'{100 * sizes[i] / sum(sizes):.0f}'))
+            self.table.setItem(i, 1, QtWidgets.QTableWidgetItem(f'{100 * size / sum(sizes):.0f}'))
         p.close(alert=False)
 
 
@@ -97,12 +97,12 @@ if __name__ == '__main__':
         args = parser.parse_args()
 
         p = office.PowerPoint(args.input)
-        f = tempfile.NamedTemporaryFile(suffix='.pptx', delete=False)
-        f.close()
+        with tempfile.NamedTemporaryFile(suffix='.pptx', delete=False) as f:
+            filepath = pathlib.Path(f.name)
         for i in range(1, p.doc.Slides.Count + 1):
-            p.export(f.name, i)
-            print(f'{i:>3}/{p.doc.Slides.Count}: {os.path.getsize(f.name) / 1e6:.1f} MB')
-        os.remove(f.name)
+            p.export(filepath, i)
+            print(f'{i:>3}/{p.doc.Slides.Count}: {filepath.stat().st_size / 1e6:.1f} MB')
+        filepath.unlink()
         del p
     else:
         app = QtWidgets.QApplication(sys.argv)

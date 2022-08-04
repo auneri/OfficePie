@@ -1,6 +1,7 @@
 import contextlib
 import io
 import os
+import pathlib
 import sys
 
 import pythoncom
@@ -26,17 +27,17 @@ class Application(object):
             raise RuntimeError(f'Failed to start {application}') from error
         if visible is not None and application != 'PowerPoint':
             self.app.Visible = boolean(visible)
-        if filepath is not None and os.path.isfile(filepath):
-            self.doc = self._get_open_file(filepath)
+        if filepath is not None and pathlib.Path(filepath).is_file():
+            self.doc = self._get_open_file(str(filepath))
             if self.doc is None:
+                kwargs = {}
                 if visible is not None and application == 'PowerPoint':
-                    self.doc = getattr(self.app, document).Open(filepath, WithWindow=boolean(visible))
-                else:
-                    self.doc = getattr(self.app, document).Open(filepath)
+                    kwargs['WithWindow'] = boolean(visible)
+                self.doc = getattr(self.app, document).Open(str(filepath), **kwargs)
         else:
             self.doc = getattr(self.app, document).Add()
             if filepath is not None:
-                self.doc.SaveAs(filepath)
+                self.doc.SaveAs(str(filepath))
 
     def close(self, alert=True, switch=None):
         if switch is None:
@@ -49,8 +50,8 @@ class Application(object):
     def _get_open_file(self, filepath):
         context = pythoncom.CreateBindCtx(0)
         for moniker in pythoncom.GetRunningObjectTable():
-            if filepath == os.path.abspath(moniker.GetDisplayName(context, None)):
-                return win32com.client.GetObject(filepath)
+            if str(filepath) == os.path.abspath(moniker.GetDisplayName(context, None)):
+                return win32com.client.GetObject(str(filepath))
 
     def _proxy(self, name=''):
         """Ensure generation of named static COM proxy upon dispatch."""
