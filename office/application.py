@@ -7,7 +7,7 @@ import pythoncom
 import win32com.client
 from win32com.client import constants, makepy
 
-from .util import inch
+from .util import boolean, inch
 
 
 class Application(object):
@@ -25,12 +25,12 @@ class Application(object):
         except pythoncom.com_error as error:
             raise RuntimeError(f'Failed to start {application}') from error
         if visible is not None and application != 'PowerPoint':
-            self.app.Visible = constants.msoTrue if visible else constants.msoFalse
+            self.app.Visible = boolean(visible)
         if filepath is not None and os.path.isfile(filepath):
             self.doc = self._get_open_file(filepath)
             if self.doc is None:
                 if visible is not None and application == 'PowerPoint':
-                    self.doc = getattr(self.app, document).Open(filepath, WithWindow=constants.msoTrue if visible else constants.msoFalse)
+                    self.doc = getattr(self.app, document).Open(filepath, WithWindow=boolean(visible))
                 else:
                     self.doc = getattr(self.app, document).Open(filepath)
         else:
@@ -40,7 +40,7 @@ class Application(object):
 
     def close(self, alert=True, switch=None):
         if switch is None:
-            switch = constants.msoTrue, constants.msoFalse
+            switch = boolean(True), boolean(False)
         display_alerts = self.app.DisplayAlerts
         self.app.DisplayAlerts = switch[0] if alert else switch[1]
         self.doc.Close()
@@ -80,7 +80,7 @@ class Word(Application):
 
     def add_image(self, filepath):
         paragraph = self.doc.Paragraphs.Add(self.doc.Paragraphs(self.doc.Paragraphs.Count).Range)
-        return self.doc.InlineShapes.AddPicture(FileName=filepath, LinkToFile=constants.msoFalse, SaveWithDocument=constants.msoTrue, Range=paragraph.Range)
+        return self.doc.InlineShapes.AddPicture(FileName=filepath, LinkToFile=constants.msoFalse, SaveWithDocument=boolean(True), Range=paragraph.Range)
 
     def add_text(self, text):
         paragraph = self.doc.Paragraphs.Add(self.doc.Paragraphs(self.doc.Paragraphs.Count).Range)
@@ -104,7 +104,7 @@ class Word(Application):
                 if r.Type == constants.wdRevisionDelete:
                     if strike_deletions:
                         r.Range.Font.ColorIndex = constants.wdBlue if color is None else color
-                        r.Range.Font.StrikeThrough = constants.msoTrue
+                        r.Range.Font.StrikeThrough = boolean(True)
                         r.Reject()
                     else:
                         r.Accept()
@@ -183,7 +183,7 @@ class PowerPoint(Application):
         if size is not None:
             kwargs['Width'] = inch(size[0])
             kwargs['Height'] = inch(size[1])
-        return slide.Shapes.AddPicture(FileName=filepath, LinkToFile=constants.msoFalse, SaveWithDocument=constants.msoTrue, Left=inch(position[0]), Top=inch(position[1]), **kwargs)
+        return slide.Shapes.AddPicture(FileName=filepath, LinkToFile=constants.msoFalse, SaveWithDocument=boolean(True), Left=inch(position[0]), Top=inch(position[1]), **kwargs)
 
     def close(self, alert=True):
         super(PowerPoint, self).close(alert, switch=(constants.ppAlertsAll, constants.ppAlertsNone))

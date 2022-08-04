@@ -1,3 +1,9 @@
+from win32com.client import constants
+
+
+def boolean(value):
+    return constants.msoTrue if value else constants.msoFalse
+
 
 def inch(value, reverse=False):
     if reverse:
