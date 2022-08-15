@@ -17,7 +17,7 @@ class Application(object):
     See https://msdn.microsoft.com/en-us/library/office/jj162978.aspx.
     """
 
-    def __init__(self, application, document, filepath=None, visible=None, version=16.0):
+    def __init__(self, application, document, filepath=None, visible=True, version=16.0):
         self.app = None
         self._proxy(f'Microsoft Office {version:.1f} Object Library')
         self._proxy(f'Microsoft {application} {version:.1f} Object Library')
@@ -25,13 +25,13 @@ class Application(object):
             self.app = win32com.client.gencache.EnsureDispatch(f'{application}.Application')
         except pythoncom.com_error as error:
             raise RuntimeError(f'Failed to start {application}') from error
-        if visible is not None and application != 'PowerPoint':
+        if application != 'PowerPoint':
             self.app.Visible = boolean(visible)
         if filepath is not None and pathlib.Path(filepath).is_file():
             self.doc = self._get_open_file(str(filepath))
             if self.doc is None:
                 kwargs = {}
-                if visible is not None and application == 'PowerPoint':
+                if application == 'PowerPoint':
                     kwargs['WithWindow'] = boolean(visible)
                 self.doc = getattr(self.app, document).Open(str(filepath), **kwargs)
         else:
