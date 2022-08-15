@@ -54,7 +54,7 @@ class Application(object):
     def _get_open_file(self, filepath):
         context = pythoncom.CreateBindCtx(0)
         for moniker in pythoncom.GetRunningObjectTable():
-            if str(filepath) == os.path.abspath(moniker.GetDisplayName(context, None)):
+            if str(filepath) == os.path.abspath(moniker.GetDisplayName(context, None)):  # noqa; PL100
                 return win32com.client.GetObject(str(filepath))
 
     def _proxy(self, name=''):
@@ -98,7 +98,7 @@ class Word(Application):
 
     def mark_revisions(self, author=None, color=None, strike_deletions=False):
         """Convert tracked changes to marked revisions."""
-        unhandled_revisions = {eval('constants.wdRevision{}'.format(revision.replace(' ', ''))): revision for revision in (
+        unhandled_revisions = {eval('constants.wdRevision{}'.format(revision.replace(' ', ''))): revision for revision in (  # noqa: FS002
             'Cell Deletion', ' Cell Insertion', 'Cell Merge', 'Cell Split', 'Conflict', 'Conflict Delete',
             'Conflict Insert', 'Display Field', 'Moved From', 'Moved To', 'Paragraph Number', 'Paragraph Property',
             'Property', 'Reconcile', 'Replace', 'Section Property', 'Style', 'Style Definition', 'Table Property')}
