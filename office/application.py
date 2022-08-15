@@ -73,7 +73,7 @@ class Word(Application):
     """
 
     def __init__(self, *args, **kwargs):
-        super(Word, self).__init__('Word', 'Documents', *args, **kwargs)
+        super().__init__('Word', 'Documents', *args, **kwargs)
 
     def __del__(self):
         if self.app is not None and len(self.app.Documents) == 0:
@@ -89,7 +89,7 @@ class Word(Application):
         return paragraph
 
     def close(self, alert=True):
-        super(Word, self).close(alert, switch=(constants.wdAlertsAll, constants.wdAlertsNone))
+        super().close(alert, switch=(constants.wdAlertsAll, constants.wdAlertsNone))
 
     def mark_revisions(self, author=None, color=None, strike_deletions=False):
         """Convert tracked changes to marked revisions."""
@@ -133,7 +133,7 @@ class Excel(Application):
     """
 
     def __init__(self, *args, **kwargs):
-        super(Excel, self).__init__('Excel', 'Workbooks', *args, **kwargs)
+        super().__init__('Excel', 'Workbooks', *args, **kwargs)
 
     def __del__(self):
         if self.app is not None and len(self.app.Workbooks) == 0:
@@ -156,7 +156,7 @@ class PowerPoint(Application):
     """
 
     def __init__(self, *args, **kwargs):
-        super(PowerPoint, self).__init__('PowerPoint', 'Presentations', *args, **kwargs)
+        super().__init__('PowerPoint', 'Presentations', *args, **kwargs)
 
     def __del__(self):
         if self.app is not None and len(self.app.Presentations) == 0:
@@ -187,7 +187,7 @@ class PowerPoint(Application):
         return slide.Shapes.AddPicture(FileName=filepath, LinkToFile=constants.msoFalse, SaveWithDocument=boolean(True), Left=inch(position[0]), Top=inch(position[1]), **kwargs)
 
     def close(self, alert=True):
-        super(PowerPoint, self).close(alert, switch=(constants.ppAlertsAll, constants.ppAlertsNone))
+        super().close(alert, switch=(constants.ppAlertsAll, constants.ppAlertsNone))
 
     def export(self, filepath, index):
         self.doc.SaveCopyAs(filepath)
