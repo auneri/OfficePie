@@ -39,6 +39,10 @@ class Application(object):
             if filepath is not None:
                 self.doc.SaveAs(str(filepath))
 
+    def quit(self):  # noqa: A003
+        self.app.Quit()
+        self.app = self.doc = self._proxy = None
+
     def close(self, alert=True, switch=None):
         if switch is None:
             switch = boolean(True), boolean(False)
@@ -75,9 +79,10 @@ class Word(Application):
     def __init__(self, *args, **kwargs):
         super().__init__('Word', 'Documents', *args, **kwargs)
 
-    def __del__(self):
-        if self.app is not None and len(self.app.Documents) == 0:
-            self.app.Quit()
+    def quit(self):  # noqa: A003
+        if self.app is not None and len(self.app.Documents) > 0:
+            raise RuntimeError(f'Cannot quit with {len(self.app.Documents)} document(s) open')
+        super().quit()
 
     def add_image(self, filepath):
         paragraph = self.doc.Paragraphs.Add(self.doc.Paragraphs(self.doc.Paragraphs.Count).Range)
@@ -135,9 +140,10 @@ class Excel(Application):
     def __init__(self, *args, **kwargs):
         super().__init__('Excel', 'Workbooks', *args, **kwargs)
 
-    def __del__(self):
-        if self.app is not None and len(self.app.Workbooks) == 0:
-            self.app.Quit()
+    def quit(self):  # noqa: A003
+        if self.app is not None and len(self.app.Workbooks) > 0:
+            raise RuntimeError(f'Cannot quit with {len(self.app.Workbooks)} workbook(s) open')
+        super().quit()
 
     def export(self, filepath):
         self.doc.ActiveSheet.ExportAsFixedFormat(0, filepath)
@@ -158,9 +164,10 @@ class PowerPoint(Application):
     def __init__(self, *args, **kwargs):
         super().__init__('PowerPoint', 'Presentations', *args, **kwargs)
 
-    def __del__(self):
-        if self.app is not None and len(self.app.Presentations) == 0:
-            self.app.Quit()
+    def quit(self):  # noqa: A003
+        if self.app is not None and len(self.app.Presentations) > 0:
+            raise RuntimeError(f'Cannot quit with {len(self.app.Presentations)} presentation(s) open')
+        super().quit()
 
     def add_slide(self, layout=None):
         if layout is None:
