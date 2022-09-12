@@ -54,7 +54,7 @@ class Application(object):
     def _get_open_file(self, filepath):
         context = pythoncom.CreateBindCtx(0)
         for moniker in pythoncom.GetRunningObjectTable():
-            if str(filepath) == os.path.abspath(moniker.GetDisplayName(context, None)):  # noqa; PL100
+            if str(filepath) == os.path.abspath(moniker.GetDisplayName(context, None)):  # noqa: PL100
                 return win32com.client.GetObject(str(filepath))
 
     def _proxy(self, name=''):
@@ -242,7 +242,7 @@ class PowerPoint(Application):
             shape.Left = self.doc.PageSetup.SlideWidth - shape.Width - x
 
     def ungroup(self, shape, flatten=False):
-        def ungroups(shape, shapes=[]):
+        def ungroups(shape, shapes=[]):  # noqa: B006
             try:
                 srange = shape.Ungroup()
                 for i in range(srange.Count):
