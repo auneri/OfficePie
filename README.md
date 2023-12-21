@@ -7,13 +7,13 @@ Microsoft Office [automation](https://msdn.microsoft.com/en-us/VBA/office-shared
 
 ## Getting started
 
-```batch
+```batchfile
 pip install git+https://github.com/auneri/OfficePie.git
 ```
 
 ## Creating portable applications
 
-```batch
+```batchfile
 set app=WordRevisions
 cd OfficePie\office\%app%
 pyinstaller %app%.spec
