@@ -156,7 +156,7 @@ def main(version, theme):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Converts Word tracked changes to formatted text')
+    parser = argparse.ArgumentParser()
     parser.add_argument('--version', default=16.0)
     parser.add_argument('--theme', default='dark')
     args = parser.parse_args()
