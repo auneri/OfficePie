@@ -75,13 +75,13 @@ class Window(QtWidgets.QWidget):
             self.output_path.setText(os.path.abspath(path))
 
     def on_mark(self):
-        w = office.Word(self.input_path.text())
-        self.progress.setMaximum(w.doc.Revisions.Count)
-        for n in w.mark_revisions(strike_deletions=self.strike_deletions.isChecked()):
+        doc = office.Word(self.input_path.text())
+        self.progress.setMaximum(doc.doc.Revisions.Count)
+        for n in doc.mark_revisions(strike_deletions=self.strike_deletions.isChecked()):
             self.progress.setValue(n)
             QtCore.QCoreApplication.processEvents(QtCore.QEventLoop.AllEvents, 100)
-        w.doc.SaveAs(self.output_path.text())
-        w.close(alert=False)
+        doc.doc.SaveAs(self.output_path.text())
+        doc.close(alert=False)
         self.progress.setValue(0)
 
 
@@ -93,13 +93,13 @@ if __name__ == '__main__':
         parser.add_argument('--strike-deletions', action='store_true', help='Strike deletions instead of removing them')
         args = parser.parse_args()
 
-        w = office.Word(args.input)
-        N = w.doc.Revisions.Count
-        for n in w.mark_revisions(args.strike_deletions):
+        doc = office.Word(args.input)
+        N = doc.doc.Revisions.Count
+        for n in doc.mark_revisions(args.strike_deletions):
             sys.stdout.write(f'\rMarking... {100 * n / N:.0f}%')
             sys.stdout.flush()
-        w.doc.SaveAs(args.output)
-        del w
+        doc.doc.SaveAs(args.output)
+        del doc
     else:
         app = QtWidgets.QApplication(sys.argv)
         window = Window()

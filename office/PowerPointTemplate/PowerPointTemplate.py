@@ -21,48 +21,48 @@ def main(version, theme):
     winreg.SetValueEx(key, 'ExportBitmapResolution', 0, winreg.REG_DWORD, int(96 * 1.5))  # 1920x1080
     winreg.CloseKey(key)
 
-    p = office.PowerPoint(version=version)
+    ppt = office.PowerPoint(version=version)
 
-    slide_height = inch(p.doc.PageSetup.SlideHeight, reverse=True)
-    slide_width = inch(p.doc.PageSetup.SlideWidth, reverse=True)
+    slide_height = inch(ppt.doc.PageSetup.SlideHeight, reverse=True)
+    slide_width = inch(ppt.doc.PageSetup.SlideWidth, reverse=True)
     title_height = 1.2
     padding = 0.6, 0.3
     margin = 0.1, 0.1
     indent = 0.5
 
     # disable "Use Timings"
-    p.doc.SlideShowSettings.AdvanceMode = constants.ppSlideShowManualAdvance
+    ppt.doc.SlideShowSettings.AdvanceMode = constants.ppSlideShowManualAdvance
 
     # assign theme fonts
-    p.doc.SlideMaster.Theme.ThemeFontScheme.MajorFont(constants.msoThemeLatin).Name = 'Cambria'  # headings
+    ppt.doc.SlideMaster.Theme.ThemeFontScheme.MajorFont(constants.msoThemeLatin).Name = 'Cambria'  # headings
     if theme == 'dark':
-        p.doc.SlideMaster.Theme.ThemeFontScheme.MinorFont(constants.msoThemeLatin).Name = 'Calibri'  # body
+        ppt.doc.SlideMaster.Theme.ThemeFontScheme.MinorFont(constants.msoThemeLatin).Name = 'Calibri'  # body
     elif theme == 'light':
-        p.doc.SlideMaster.Theme.ThemeFontScheme.MinorFont(constants.msoThemeLatin).Name = 'Cambria'  # body
+        ppt.doc.SlideMaster.Theme.ThemeFontScheme.MinorFont(constants.msoThemeLatin).Name = 'Cambria'  # body
 
     # assign theme colors
     if theme == 'dark':
-        p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorDark1).RGB = rgb(255, 255, 255)  # white
-        p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorLight1).RGB = rgb(0, 0, 0)  # black
-        p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorDark2).RGB = rgb(204, 204, 204)  # dirty white
-        p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorLight2).RGB = rgb(51, 51, 51)  # dirty black
-        p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent1).RGB = rgb(238, 238, 34)  # yellow
-        p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent2).RGB = rgb(238, 136, 238)  # magenta
-        p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent3).RGB = rgb(34, 238, 34)  # green
-        p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent4).RGB = rgb(34, 238, 238)  # cyan
-        p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent5).RGB = rgb(238, 136, 34)  # orange
-        p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent6).RGB = rgb(136, 34, 238)  # purple
-        p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorHyperlink).RGB = rgb(238, 136, 238)  # magenta
-        p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorFollowedHyperlink).RGB = rgb(238, 136, 238)  # magenta
+        ppt.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorDark1).RGB = rgb(255, 255, 255)  # white
+        ppt.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorLight1).RGB = rgb(0, 0, 0)  # black
+        ppt.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorDark2).RGB = rgb(204, 204, 204)  # dirty white
+        ppt.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorLight2).RGB = rgb(51, 51, 51)  # dirty black
+        ppt.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent1).RGB = rgb(238, 238, 34)  # yellow
+        ppt.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent2).RGB = rgb(238, 136, 238)  # magenta
+        ppt.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent3).RGB = rgb(34, 238, 34)  # green
+        ppt.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent4).RGB = rgb(34, 238, 238)  # cyan
+        ppt.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent5).RGB = rgb(238, 136, 34)  # orange
+        ppt.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorAccent6).RGB = rgb(136, 34, 238)  # purple
+        ppt.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorHyperlink).RGB = rgb(238, 136, 238)  # magenta
+        ppt.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorFollowedHyperlink).RGB = rgb(238, 136, 238)  # magenta
     elif theme == 'light':
-        p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorDark1).RGB = rgb(0, 0, 0)  # black
-        p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorLight1).RGB = rgb(255, 255, 255)  # white
-        p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorDark2).RGB = rgb(51, 51, 51)  # dirty black
-        p.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorLight2).RGB = rgb(204, 204, 204)  # dirty white
-    p.doc.SlideMaster.Background.Fill.ForeColor.ObjectThemeColor = constants.msoThemeColorLight1
+        ppt.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorDark1).RGB = rgb(0, 0, 0)  # black
+        ppt.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorLight1).RGB = rgb(255, 255, 255)  # white
+        ppt.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorDark2).RGB = rgb(51, 51, 51)  # dirty black
+        ppt.doc.SlideMaster.Theme.ThemeColorScheme(constants.msoThemeColorLight2).RGB = rgb(204, 204, 204)  # dirty white
+    ppt.doc.SlideMaster.Background.Fill.ForeColor.ObjectThemeColor = constants.msoThemeColorLight1
 
     # format slide master title
-    title = p.doc.SlideMaster.Shapes(1)
+    title = ppt.doc.SlideMaster.Shapes(1)
     title.Left = inch(padding[0])
     title.Top = inch(padding[1])
     title.Width = inch(slide_width - 2 * padding[0])
@@ -76,7 +76,7 @@ def main(version, theme):
     title.TextFrame.VerticalAnchor = constants.msoAnchorMiddle
 
     # format slide master body
-    body = p.doc.SlideMaster.Shapes(2)
+    body = ppt.doc.SlideMaster.Shapes(2)
     body.Left = inch(padding[0])
     body.Top = inch(title_height + padding[1])
     body.Width = inch(slide_width - 2 * padding[0])
@@ -95,15 +95,15 @@ def main(version, theme):
     body.TextFrame.TextRange.ParagraphFormat.SpaceWithin = 1
 
     # remove unused layouts
-    for layout in tuple(p.doc.SlideMaster.CustomLayouts):
+    for layout in tuple(ppt.doc.SlideMaster.CustomLayouts):
         if layout.Name not in ('Title Slide', 'Title and Content', 'Section Header', 'Title Only', 'Blank'):
             layout.Delete()
 
     # add a slide with "Title and Content"
-    slide = p.add_slide(constants.ppLayoutObject)
+    slide = ppt.add_slide(constants.ppLayoutObject)
 
     # customize text box defaults
-    shape = p.add_text('Defaults', (1, 1))
+    shape = ppt.add_text('Defaults', (1, 1))
     shape.TextFrame.MarginLeft = 0
     shape.TextFrame.MarginRight = 0
     shape.TextFrame.MarginTop = 0
@@ -152,7 +152,7 @@ def main(version, theme):
         shape.Fill.Transparency = 0.75
         shape.ZOrder(constants.msoSendToBack)
 
-    return p
+    return ppt
 
 
 if __name__ == '__main__':

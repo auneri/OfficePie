@@ -71,23 +71,23 @@ class Window(QtWidgets.QWidget):
             self.input_path.setText(str(pathlib.Path(filepath).resolve()))
 
     def on_size(self):
-        p = office.PowerPoint(self.input_path.text())
-        self.progress.setMaximum(p.doc.Slides.Count)
-        self.table.setRowCount(p.doc.Slides.Count)
+        ppt = office.PowerPoint(self.input_path.text())
+        self.progress.setMaximum(ppt.doc.Slides.Count)
+        self.table.setRowCount(ppt.doc.Slides.Count)
         with tempfile.NamedTemporaryFile(suffix='.pptx', delete=False) as f:
             filepath = pathlib.Path(f.name)
         sizes = []
-        for i in range(p.doc.Slides.Count):
+        for i in range(ppt.doc.Slides.Count):
             self.progress.setValue(i)
             QtCore.QCoreApplication.processEvents(QtCore.QEventLoop.AllEvents, 100)
-            p.export(filepath, i + 1)
+            ppt.export(filepath, i + 1)
             sizes.append(filepath.stat().st_size / 1e6)
             self.table.setItem(i, 0, QtWidgets.QTableWidgetItem(f'{sizes[i]:.2f}'))
         filepath.unlink()
         self.progress.setValue(0)
         for i, size in enumerate(sizes):
             self.table.setItem(i, 1, QtWidgets.QTableWidgetItem(f'{100 * size / sum(sizes):.0f}'))
-        p.close(alert=False)
+        ppt.close(alert=False)
 
 
 if __name__ == '__main__':
@@ -96,14 +96,14 @@ if __name__ == '__main__':
         parser.add_argument('input', help='Input presentation')
         args = parser.parse_args()
 
-        p = office.PowerPoint(args.input)
+        ppt = office.PowerPoint(args.input)
         with tempfile.NamedTemporaryFile(suffix='.pptx', delete=False) as f:
             filepath = pathlib.Path(f.name)
-        for i in range(1, p.doc.Slides.Count + 1):
-            p.export(filepath, i)
-            print(f'{i:>3}/{p.doc.Slides.Count}: {filepath.stat().st_size / 1e6:.1f} MB')
+        for i in range(1, ppt.doc.Slides.Count + 1):
+            ppt.export(filepath, i)
+            print(f'{i:>3}/{ppt.doc.Slides.Count}: {filepath.stat().st_size / 1e6:.1f} MB')
         filepath.unlink()
-        del p
+        del ppt
     else:
         app = QtWidgets.QApplication(sys.argv)
         window = Window()
