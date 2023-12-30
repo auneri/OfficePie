@@ -22,6 +22,7 @@ def main(version, theme):
     winreg.CloseKey(key)
 
     ppt = office.PowerPoint(version=version)
+    ppt.doc.RemoveDocumentInformation(constants.ppRDIDocumentProperties)
 
     slide_height = inch(ppt.doc.PageSetup.SlideHeight, reverse=True)
     slide_width = inch(ppt.doc.PageSetup.SlideWidth, reverse=True)
