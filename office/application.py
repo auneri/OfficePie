@@ -86,7 +86,7 @@ class Word(Application):
 
     def add_image(self, filepath):
         paragraph = self.doc.Paragraphs.Add(self.doc.Paragraphs(self.doc.Paragraphs.Count).Range)
-        return self.doc.InlineShapes.AddPicture(FileName=filepath, LinkToFile=constants.msoFalse, SaveWithDocument=boolean(True), Range=paragraph.Range)
+        return self.doc.InlineShapes.AddPicture(FileName=filepath, LinkToFile=boolean(False), SaveWithDocument=boolean(True), Range=paragraph.Range)
 
     def add_text(self, text):
         paragraph = self.doc.Paragraphs.Add(self.doc.Paragraphs(self.doc.Paragraphs.Count).Range)
@@ -104,7 +104,7 @@ class Word(Application):
             'Property', 'Reconcile', 'Replace', 'Section Property', 'Style', 'Style Definition', 'Table Property')}
 
         track_revisions = self.doc.TrackRevisions
-        self.doc.TrackRevisions = constants.msoFalse
+        self.doc.TrackRevisions = boolean(False)
         for i, r in enumerate(self.doc.Revisions):
             if author is None or r.Author == author:
                 if r.Type == constants.wdRevisionDelete:
@@ -181,7 +181,7 @@ class PowerPoint(Application):
     def add_text(self, text, position=(0, 0), size=(0, 0), slide=None):
         slide = self.get_slide(slide)
         shape = slide.Shapes.AddTextbox(Orientation=constants.msoTextOrientationHorizontal, Left=inch(position[0]), Top=inch(position[1]), Width=inch(size[0]), Height=inch(size[1]))
-        shape.TextFrame.WordWrap = constants.msoFalse
+        shape.TextFrame.WordWrap = boolean(False)
         shape.TextFrame.TextRange.Text = text
         return shape
 
@@ -191,7 +191,7 @@ class PowerPoint(Application):
         if size is not None:
             kwargs['Width'] = inch(size[0])
             kwargs['Height'] = inch(size[1])
-        return slide.Shapes.AddPicture(FileName=filepath, LinkToFile=constants.msoFalse, SaveWithDocument=boolean(True), Left=inch(position[0]), Top=inch(position[1]), **kwargs)
+        return slide.Shapes.AddPicture(FileName=filepath, LinkToFile=boolean(False), SaveWithDocument=boolean(True), Left=inch(position[0]), Top=inch(position[1]), **kwargs)
 
     def close(self, alert=True):
         super().close(alert, switch=(constants.ppAlertsAll, constants.ppAlertsNone))

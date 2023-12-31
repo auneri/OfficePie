@@ -150,7 +150,7 @@ def main(version, theme):
         slide.Shapes.AddShape(constants.msoShapeRectangle, inch(pad), inch((slide_height + pad) / 2), inch((slide_width - pad) / 2 - pad), inch((slide_height - pad) / 2 - pad)),
         slide.Shapes.AddShape(constants.msoShapeRectangle, inch((slide_width + pad) / 2), inch((slide_height + pad) / 2), inch((slide_width - pad) / 2 - pad), inch((slide_height - pad) / 2 - pad))]
     for i, shape in enumerate(shapes, start=2):
-        shape.Line.Visible = constants.msoFalse
+        shape.Line.Visible = boolean(False)
         shape.Fill.ForeColor.ObjectThemeColor = getattr(constants, f'msoThemeColorAccent{i}')
         shape.Fill.Transparency = 0.75
         shape.ZOrder(constants.msoSendToBack)
