@@ -97,7 +97,7 @@ def main(version, theme):
 
     # remove unused layouts
     for layout in tuple(ppt.doc.SlideMaster.CustomLayouts):
-        if layout.Name not in ('Title Slide', 'Title and Content', 'Section Header', 'Title Only', 'Blank'):
+        if layout.Name != 'Blank':
             layout.Delete()
 
     # add a slide with "Title and Content"
