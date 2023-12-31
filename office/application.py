@@ -8,7 +8,7 @@ import pythoncom
 import win32com.client
 from win32com.client import constants, makepy
 
-from .util import boolean, inch
+from .util import boolean, inch, rgb
 
 
 class Application:
@@ -157,7 +157,7 @@ class PowerPoint(Application):
 
     >>> p = PowerPoint()
     >>> slide = p.add_slide()
-    >>> p.add_text(f'Slide {slide.SlideNumber}', (0.2,0.2), slide=slide.SlideNumber)
+    >>> p.add_text(f'Slide {slide.SlideNumber}', position=(0.2,0.2), slide=slide.SlideNumber)
     >>> p.doc.SaveAs('/path/to/file.pptx')
     """
 
@@ -178,11 +178,27 @@ class PowerPoint(Application):
         slide.Select()
         return slide
 
-    def add_text(self, text, position=(0, 0), size=(0, 0), slide=None):
+    def add_text(self, text, position=(0, 0), size=(0, 0), margins=(0, 0, 0, 0), fontsize=None, fontcolor=None, bold=None, wrap=None, glow=None, slide=None):
         slide = self.get_slide(slide)
         shape = slide.Shapes.AddTextbox(Orientation=constants.msoTextOrientationHorizontal, Left=inch(position[0]), Top=inch(position[1]), Width=inch(size[0]), Height=inch(size[1]))
-        shape.TextFrame.WordWrap = boolean(False)
         shape.TextFrame.TextRange.Text = text
+        if margins is not None:
+            shape.TextFrame.MarginLeft = margins[0]
+            shape.TextFrame.MarginRight = margins[1]
+            shape.TextFrame.MarginTop = margins[2]
+            shape.TextFrame.MarginBottom = margins[3]
+        if fontsize is not None:
+            shape.TextFrame.TextRange.Font.Size = fontsize
+        if fontcolor is not None:
+            shape.TextFrame.TextRange.Font.Color.RGB = rgb(*fontcolor)
+        if bold is not None:
+            shape.TextFrame.TextRange.Font.Bold = boolean(bold)
+        if wrap is not None:
+            shape.TextFrame.WordWrap = boolean(wrap)
+        if glow is not None:
+            shape.TextFrame2.TextRange.Font.Glow.Color.RGB = rgb(*glow['color'])
+            shape.TextFrame2.TextRange.Font.Glow.Radius = glow['radius']
+            shape.TextFrame2.TextRange.Font.Glow.Transparency = glow['alpha']
         return shape
 
     def add_image(self, filepath, position=(0, 0), size=None, slide=None):

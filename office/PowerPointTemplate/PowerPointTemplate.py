@@ -104,12 +104,7 @@ def main(version, theme):
     slide = ppt.add_slide(constants.ppLayoutBlank)
 
     # customize text box defaults
-    shape = ppt.add_text('Defaults', position=(1, 1))
-    shape.TextFrame.MarginLeft = 0
-    shape.TextFrame.MarginRight = 0
-    shape.TextFrame.MarginTop = 0
-    shape.TextFrame.MarginBottom = 0
-    shape.TextFrame.TextRange.Font.Size = 20
+    shape = ppt.add_text('Defaults', position=(1, 1), fontsize=20)
     shape.SetShapesDefaultProperties()
     shape.Delete()
 
@@ -134,13 +129,10 @@ def main(version, theme):
         [2, 'Morbi eget nulla sagittis, finibus quam sit amet, cursus ante'],
         [3, 'Donec luctus mauris vel tortor blandit blandit'],
         [2, 'Praesent aliquet dolor ut nisl egestas gravida']]
-    title = ppt.add_text(title_text, position=(1, 1))
+    title = ppt.add_text(title_text, position=(1, 1), fontsize=36, bold=True)
     title.TextFrame.TextRange.Font.Color.ObjectThemeColor = constants.msoThemeColorAccent1
-    title.TextFrame.TextRange.Font.Size = 36
-    title.TextFrame.TextRange.Font.Bold = boolean(True)
     body = ppt.add_text('\r'.join(x for _, x in body_text), position=(1, 2))
     body.TextFrame.TextRange.Font.Color.ObjectThemeColor = constants.msoThemeColorDark1
-    body.TextFrame.TextRange.Font.Size = 20
     for i, (indent, _) in enumerate(body_text, start=1):
         body.TextFrame.TextRange.Paragraphs(i).IndentLevel = indent
     pad = 0.1
