@@ -11,7 +11,7 @@ from win32com.client import constants, makepy
 from .util import boolean, inch
 
 
-class Application(object):
+class Application:
     """A minimial wrapper for managing Microsoft Office documents through Component Object Model (COM).
 
     See https://msdn.microsoft.com/en-us/library/office/jj162978.aspx.
