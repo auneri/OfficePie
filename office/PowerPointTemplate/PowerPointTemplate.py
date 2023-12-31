@@ -8,7 +8,7 @@ import argparse
 
 import office
 import winreg
-from office.util import inch, rgb
+from office.util import boolean, inch, rgb
 from win32com.client import constants
 
 
@@ -101,10 +101,10 @@ def main(version, theme):
             layout.Delete()
 
     # add a slide with "Title and Content"
-    slide = ppt.add_slide(constants.ppLayoutObject)
+    slide = ppt.add_slide(constants.ppLayoutBlank)
 
     # customize text box defaults
-    shape = ppt.add_text('Defaults', (1, 1))
+    shape = ppt.add_text('Defaults', position=(1, 1))
     shape.TextFrame.MarginLeft = 0
     shape.TextFrame.MarginRight = 0
     shape.TextFrame.MarginTop = 0
@@ -125,22 +125,24 @@ def main(version, theme):
     shape.SetShapesDefaultProperties()
     shape.Delete()
 
-    # create a sample slide
-    title = 'Lorem Ipsum Dolor Sit\x0bAmet'
-    content = [
+    # create a sample content
+    title_text = 'Lorem Ipsum Dolor Sit Amet'
+    body_text = [
         [1, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'],
         [2, 'Nam lacinia nisl et ullamcorper luctus'],
         [1, 'Nunc vel lectus et risus maximus viverra'],
-        [2, 'Morbi eget nulla sagittis, finibus quam sit amet,\x0bcursus ante'],
+        [2, 'Morbi eget nulla sagittis, finibus quam sit amet, cursus ante'],
         [3, 'Donec luctus mauris vel tortor blandit blandit'],
         [2, 'Praesent aliquet dolor ut nisl egestas gravida']]
-    slide.Shapes(1).TextFrame.TextRange.Text = title
-    subtitle = slide.Shapes(1).TextFrame.TextRange.Characters(1 + len(title) - 5, 5)
-    subtitle.Font.Color.ObjectThemeColor = constants.msoThemeColorDark1
-    subtitle.Font.Size = 27
-    slide.Shapes(2).TextFrame.TextRange.Text = '\r'.join(text for _, text in content)
-    for i, (indent, _) in enumerate(content, start=1):
-        slide.Shapes(2).TextFrame.TextRange.Paragraphs(i).IndentLevel = indent
+    title = ppt.add_text(title_text, position=(1, 1))
+    title.TextFrame.TextRange.Font.Color.ObjectThemeColor = constants.msoThemeColorAccent1
+    title.TextFrame.TextRange.Font.Size = 36
+    title.TextFrame.TextRange.Font.Bold = boolean(True)
+    body = ppt.add_text('\r'.join(x for _, x in body_text), position=(1, 2))
+    body.TextFrame.TextRange.Font.Color.ObjectThemeColor = constants.msoThemeColorDark1
+    body.TextFrame.TextRange.Font.Size = 20
+    for i, (indent, _) in enumerate(body_text, start=1):
+        body.TextFrame.TextRange.Paragraphs(i).IndentLevel = indent
     pad = 0.1
     shapes = [
         slide.Shapes.AddShape(constants.msoShapeRectangle, inch(pad), inch(pad), inch((slide_width - pad) / 2 - pad), inch((slide_height - pad) / 2 - pad)),
