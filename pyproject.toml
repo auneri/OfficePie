@@ -32,6 +32,8 @@ flake8 = [
     "flake8-use-fstring",
     "flake8-use-pathlib",
     "pep8-naming"]
+pyinstaller = [
+    "pyinstaller~=6.0"]
 
 [project.urls]
 Homepage = "https://auneri.github.io/OfficePie"
