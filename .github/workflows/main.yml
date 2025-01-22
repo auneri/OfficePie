@@ -4,8 +4,8 @@ on: [push]
 
 jobs:
 
-  build:
-    name: build (python-${{ matrix.python-version }})
+  test:
+    name: test (python-${{ matrix.python-version }})
     runs-on: windows-latest
 
     strategy:
