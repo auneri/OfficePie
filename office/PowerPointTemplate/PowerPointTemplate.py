@@ -5,11 +5,12 @@ For help in extending this template, see https://msdn.microsoft.com/en-us/VBA/VB
 """
 
 import argparse
+import winreg
+
+from win32com.client import constants
 
 import office
-import winreg
 from office.util import boolean, inch, rgb
-from win32com.client import constants
 
 
 def main(version, theme):

@@ -9,14 +9,15 @@ import pathlib
 import sys
 import tempfile
 
-import office
 from PyQt5 import QtCore, QtGui, QtWidgets
+
+import office
 
 
 class Window(QtWidgets.QWidget):
 
     def __init__(self, *args, **kwargs):
-        super(Window, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         input_select = QtWidgets.QPushButton('...')
         self.input_path = QtWidgets.QLabel('Input Presentation.pptx')
